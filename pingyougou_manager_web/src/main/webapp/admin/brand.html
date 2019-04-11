@@ -100,13 +100,16 @@
             //批量删除
 			$scope.dele=function () {
                 //获取选中的复选框
-				$http.get("../brand/delete.do?ids="+$scope.selectIds).success(
-				    function (response) {
-						if(response.success){
-						    $scope.reloadList();//刷新列表
-						}
-                    }
-				);
+				if(confirm("确定要删除吗?")){
+                    $http.get("../brand/delete.do?ids=" + $scope.selectIds).success(
+                        function (response) {
+                            if (response.success) {
+                                $scope.reloadList();//刷新列表
+                            }
+                        }
+                    );
+
+				}
             }
 
 
