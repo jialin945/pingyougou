@@ -12,7 +12,20 @@ public interface BrandService {
      */
     public List<TbBrand> findAll();
 
+    /**
+     * 分页列表
+     * @param pageNum
+     * @param PageSize
+     * @return
+     */
     public PageResult findPage(int pageNum,int PageSize);
+
+    /**
+     * 增加品牌
+     * @param brand
+     */
+    public void add(TbBrand brand);
+
 
 
 }
