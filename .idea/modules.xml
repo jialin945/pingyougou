@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../generatorSqlmapCustom/generatorSqlmapCustom.iml" filepath="$PROJECT_DIR$/../generatorSqlmapCustom/generatorSqlmapCustom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_common/pingyougou_common.iml" filepath="$PROJECT_DIR$/pingyougou_common/pingyougou_common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_dao/pingyougou_dao.iml" filepath="$PROJECT_DIR$/pingyougou_dao/pingyougou_dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_manager_web/pingyougou_manager_web.iml" filepath="$PROJECT_DIR$/pingyougou_manager_web/pingyougou_manager_web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_parent.iml" filepath="$PROJECT_DIR$/pingyougou_parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_pojo/pingyougou_pojo.iml" filepath="$PROJECT_DIR$/pingyougou_pojo/pingyougou_pojo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_sellergoods_interface/pingyougou_sellergoods_interface.iml" filepath="$PROJECT_DIR$/pingyougou_sellergoods_interface/pingyougou_sellergoods_interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_sellergoods_service/pingyougou_sellergoods_service.iml" filepath="$PROJECT_DIR$/pingyougou_sellergoods_service/pingyougou_sellergoods_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_shop_web/pingyougou_shop_web.iml" filepath="$PROJECT_DIR$/pingyougou_shop_web/pingyougou_shop_web.iml" />
+    </modules>
+  </component>
+</project>
