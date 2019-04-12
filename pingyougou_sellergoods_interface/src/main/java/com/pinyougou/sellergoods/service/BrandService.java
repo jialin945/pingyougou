@@ -56,7 +56,7 @@ public interface BrandService {
      * @param pageSize 每页显示的记录数
      * @return
      */
-//    public PageResult findPage(TbBrand brand, int pageNum,int pageSize);
+    public PageResult findPage(TbBrand brand, int pageNum,int pageSize);
 
 
 

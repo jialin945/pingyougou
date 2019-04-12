@@ -29,7 +29,7 @@ public class BrandServiceImpl implements BrandService {
         PageHelper.startPage(pageNum, PageSize);
         Page<TbBrand> page = (Page<TbBrand>) brandMapper.selectByExample(null);
 
-        return new PageResult(page.getTotal(),page.getResult());
+        return new PageResult(page.getTotal(), page.getResult());
     }
 
     @Override
@@ -54,21 +54,21 @@ public class BrandServiceImpl implements BrandService {
         }
     }
 
-    /*@Override
+    @Override
     public PageResult findPage(TbBrand brand, int pageNum, int pageSize) {
 
 
         PageHelper.startPage(pageNum, pageSize);//分页
 
-        TbBrandExample example=new TbBrandExample();
+        TbBrandExample example = new TbBrandExample();
 
         Criteria criteria = example.createCriteria();
-        if(brand!=null){
-            if(brand.getName()!=null && brand.getName().length()>0){
-                criteria.andNameLike("%"+brand.getName()+"%");
+        if (brand != null) {
+            if (brand.getName() != null && brand.getName().length() > 0) {
+                criteria.andNameLike("%" + brand.getName() + "%");
             }
-            if(brand.getFirstChar()!=null && brand.getFirstChar().length()>0){
-                criteria.andFirstCharLike("%"+brand.getFirstChar()+"%");
+            if (brand.getFirstChar() != null && brand.getFirstChar().length() > 0) {
+                criteria.andFirstCharLike("%" + brand.getFirstChar() + "%");
             }
         }
 
@@ -76,10 +76,10 @@ public class BrandServiceImpl implements BrandService {
 
         return new PageResult(page.getTotal(), page.getResult());
 
+    }
 
 
-
-        *//*PageHelper.startPage(pageNum, pageSize);
+        /*PageHelper.startPage(pageNum, pageSize);
 
         TbBrandExample example=new TbBrandExample();
 

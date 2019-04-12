@@ -100,10 +100,10 @@ public class BrandController {
      * @param size
      * @return
      */
-   /* @RequestMapping("/search")
+    @RequestMapping("/search")
     public PageResult search(@RequestBody TbBrand brand,int page,int size){
         return brandService.findPage(brand, page, size);
-    }*/
+    }
 
 
 

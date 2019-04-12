@@ -44,8 +44,8 @@
 			};
 
 			$scope.reloadList=function () {
-				//$scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
-				$scope.findPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+				$scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+				//$scope.findPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
             }
 
 			//分页
@@ -130,14 +130,14 @@
             }
 
 
-			/*$scope.search=function (page,size) {
+			$scope.search=function (page,size) {
 				$http.post('../brand/search.do?page='+page+'&size='+size,$scope.searchEntity).success(
 				    function (response) {
 						$scope.paginationConf.totalItems=response.total;//总记录数
 						$scope.list=response.rows;//显示当前页数据
                     }
 				);
-            }*/
+            }
 
 
 
