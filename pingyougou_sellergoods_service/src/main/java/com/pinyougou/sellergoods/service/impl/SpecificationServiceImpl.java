@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pinyougou.mapper.TbSpecificationOptionMapper;
 import com.pinyougou.pojo.TbSpecificationOption;
+import com.pinyougou.pojo.TbSpecificationOptionExample;
 import com.pinyougou.pojogroup.Specification;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -12,8 +13,9 @@ import com.github.pagehelper.PageHelper;
 import com.pinyougou.mapper.TbSpecificationMapper;
 import com.pinyougou.pojo.TbSpecification;
 import com.pinyougou.pojo.TbSpecificationExample;
-import com.pinyougou.pojo.TbSpecificationExample.Criteria;
+//import com.pinyougou.pojo.TbSpecificationExample.Criteria;
 import com.pinyougou.sellergoods.service.SpecificationService;
+
 
 import entity.PageResult;
 
@@ -72,8 +74,29 @@ public class SpecificationServiceImpl implements SpecificationService {
      * 修改
      */
     @Override
-    public void update(TbSpecification specification) {
-        specificationMapper.updateByPrimaryKey(specification);
+    public void update(Specification specification) {
+        //修改规格
+        specificationMapper.updateByPrimaryKey(specification.getSpecification());
+
+        //注意修改之前先删除原有的 规格选项
+
+        //删除原有的规格选项
+        TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+        TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+        criteria.andSpecIdEqualTo(specification.getSpecification().getId());//指定规格id为条件
+        specificationOptionMapper.deleteByExample(example);//删除
+
+
+
+
+        //循环插入规格选项
+        List<TbSpecificationOption> specificationOptionList = specification.getSpecificationOptionList();
+        for (TbSpecificationOption specificationOption : specificationOptionList) {
+            specificationOption.setSpecId(specification.getSpecification().getId());
+
+            specificationOptionMapper.insert(specificationOption);
+        }
+
     }
 
     /**
@@ -83,8 +106,22 @@ public class SpecificationServiceImpl implements SpecificationService {
      * @return
      */
     @Override
-    public TbSpecification findOne(Long id) {
-        return specificationMapper.selectByPrimaryKey(id);
+    public Specification findOne(Long id) {
+        //构建组合实体类返回结果
+        Specification specification=new Specification();
+
+        //查询规格
+        TbSpecification tbSpecification = specificationMapper.selectByPrimaryKey(id);
+        specification.setSpecification(tbSpecification);
+
+        //查询规格选项列表
+        TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+        TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+        criteria.andSpecIdEqualTo(id);
+        List<TbSpecificationOption> specificationOptionList = specificationOptionMapper.selectByExample(example);
+        specification.setSpecificationOptionList(specificationOptionList);
+
+        return specification;
     }
 
     /**
@@ -94,6 +131,14 @@ public class SpecificationServiceImpl implements SpecificationService {
     public void delete(Long[] ids) {
         for (Long id : ids) {
             specificationMapper.deleteByPrimaryKey(id);
+
+            //删除原有的规格选项
+
+            TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+            TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+            criteria.andSpecIdEqualTo(id);//指定规格 ID 为条件
+            specificationOptionMapper.deleteByExample(example);//执行删除
+
         }
     }
 
@@ -103,7 +148,7 @@ public class SpecificationServiceImpl implements SpecificationService {
         PageHelper.startPage(pageNum, pageSize);
 
         TbSpecificationExample example = new TbSpecificationExample();
-        Criteria criteria = example.createCriteria();
+        TbSpecificationExample.Criteria criteria = example.createCriteria();
 
         if (specification != null) {
             if (specification.getSpecName() != null && specification.getSpecName().length() > 0) {
