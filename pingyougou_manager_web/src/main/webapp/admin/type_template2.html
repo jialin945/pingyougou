@@ -17,32 +17,55 @@
     <link rel="stylesheet" href="../plugins/select2/select2.css" />
     <link rel="stylesheet" href="../plugins/select2/select2-bootstrap.css" />
     <script src="../plugins/select2/select2.min.js" type="text/javascript"></script>
-    
-    <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
-	
 
 
-	
-	
+	<!--<script src="../plugins/angularjs/angular.min.js"></script>
+	&lt;!&ndash;分页组件开始&ndash;&gt;
+	<script src="../plugins/angularjs/pagination.js"></script>
+	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+	&lt;!&ndash;分页主键结束&ndash;&gt;
+
+
+	<script src="../js/base_pagination.js"></script>
+
+	<script src="../js/angular-select2.js"></script>
+
+	&lt;!&ndash;JS 引入的位置，要在 typeTemplateController.js 之前，因为该控制器要使用到它&ndash;&gt;
+	<script src="../js/service/brandService.js"></script>
+	<script src="../js/service/specificationService.js"></script>
+	<script src="../js/service/typeTemplateService.js"></script>
+	<script src="../js/controller/baseController.js"></script>
+	<script src="../js/controller/typeTemplateController.js"></script>-->
+
+
+	<script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+
+
+
+
+
 	<!-- 分页组件开始 -->
 	<script src="../plugins/angularjs/pagination.js"></script>
-	
+
 	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
 	<!-- 分页组件结束 -->
-	
+
 	<script type="text/javascript" src="../js/base_pagination.js"></script>
-	
+
 	<script type="text/javascript" src="../js/angular-select2.js"> </script>
-		
+
 	<script type="text/javascript" src="../js/service/typeTemplateService.js"></script>
 	<script type="text/javascript" src="../js/service/brandService.js"></script>
 	<script type="text/javascript" src="../js/service/specificationService.js"></script>
 	<script type="text/javascript" src="../js/controller/baseController.js"></script>
 	<script type="text/javascript" src="../js/controller/typeTemplateController.js"></script>
 
+
+
+
 </head>
 
-<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="typeTemplateController" ng-init="findBrandList();findSpecList()">
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="typeTemplateController" ng-init="findBrandList();findSpecificationList()" >
   <!-- .box-body -->
                 
                     <div class="box-header with-border">
@@ -58,8 +81,13 @@
                             <div class="pull-left">
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="entity={customAttributeItems:[]}"><i class="fa fa-file-o"></i> 新建</button>
-                                        <button type="button" class="btn btn-default" title="删除" ng-click="dele()"><i class="fa fa-trash-o"></i> 删除</button>
+
+                                        <!--<button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal"  ng-click="entity={customAttributeItems:[]}"><i class="fa fa-file-o"></i> 新建</button>-->
+
+										<button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="entity={customAttributeItems:[]}"><i class="fa fa-file-o"></i> 新建</button>
+
+
+										<button type="button" class="btn btn-default" title="删除" ng-click="dele()"><i class="fa fa-trash-o"></i> 删除</button>
                                        
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
                                     </div>
@@ -78,7 +106,7 @@
 			                      <thead>
 			                          <tr>
 			                              <th class="" style="padding-right:0px">
-			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue">
+			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue" >
 			                              </th> 
 										  <th class="sorting_asc">模板ID</th>
 									      <th class="sorting">分类模板名称</th>
@@ -90,21 +118,32 @@
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="entity in list">
-			                              <td><input  type="checkbox" ng-click="updateSelection($event, entity.id)" ></td>			                              
+										  <td><input  type="checkbox" ng-click="updateSelection($event, entity.id)" ></td>
 				                          <td>{{entity.id}}</td>
 									      <td>{{entity.name}}</td>
 									      <td>{{jsonToString(entity.brandIds,'text')}}</td>
-									      <td>{{jsonToString(entity.specIds,'text')}}</td>									 
-									      <td>{{jsonToString(entity.customAttributeItems,'text')}}</td>		                                                                  
+									      <td>{{jsonToString(entity.specIds,'text')}}</td>
+									      <td>{{jsonToString(entity.customAttributeItems,'text')}}</td>
 		                                  <td class="text-center">                                           
-		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal" ng-click="findOne(entity.id)">修改</button>                                           
+		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal" ng-click="findOne(entity.id)">修改</button>
 		                                  </td>
 			                          </tr>
-									  
+									  <!--<tr>
+			                              <td><input  type="checkbox"></td>			                              
+				                          <td>2</td>
+									      <td>服装</td>
+									      <td>七匹狼,雅戈尔</td>
+									      <td>服装尺码</td>									 
+									      <td></td>		                                                                  
+		                                  <td class="text-center">                                           
+		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal" >修改</button>                                           
+		                                  </td>
+			                          </tr>-->
 			                      </tbody>
 			                  </table>
 			                  <!--数据列表/-->                        
-							   <tm-pagination conf="paginationConf"></tm-pagination>  
+							  <!--分页-->
+							<tm-pagination conf="paginationConf"></tm-pagination>
 							 
                         </div>
                         <!-- 数据表格 /-->
@@ -136,22 +175,52 @@
 		      	<tr>
 		      		<td>关联品牌</td>
 		      		<td>
-		      			<input select2 select2-model="entity.brandIds"  config="brandList" multiple placeholder=" 选择品牌（可多选） " class="form-control">
+		      			<input select2 select2-model="entity.brandIds" config="brandList" multiple placeholder="选择品牌（可多选）" class="form-control" type="text"/>
 		      		</td>
 		      	</tr>
 		      	<tr>
 		      		<td>关联规格</td>
 		      		<td>
-						<input select2 select2-model="entity.specIds"  config="specList" multiple placeholder=" 选择规格（可多选） " class="form-control">
+						<input select2 select2-model="entity.specIds" config="specList" multiple placeholder="选择规格（可多选）" class="form-control" type="text">
 		      		</td>
-		      	</tr>	
+		      	</tr>
+
+				<tr>
+					<td>扩展属性</td>
+					<td>
+						<div class="btn-group">
+							<button type="button" class="btn btn-default" title="新增扩展属性" ng-click="addTableRow()"><i class="fa fa-file-o"></i> 新增扩展属性</button>
+
+						</div>
+						<table class="table table-bordered table-striped"  width="800px">
+							<thead>
+							<tr>
+								<td><input type="checkbox" class="icheckbox_square-blue"></td>
+								<td>属性名称</td>
+								<td>操作</td>
+							</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="pojo in entity.customAttributeItems">
+								<td><input type="checkbox" class="icheckbox_square-blue" ></td>
+								<td><input class="form-control" placeholder="属性名称" ng-model="pojo.text"></td>
+								<!--<td><button type="button" class="btn btn-default" title="删除" ng-click="deleTableRow($index)"><i class="fa fa-trash-o"></i> 删除</button></td>-->
+								<td><button type="button" class="btn btn-default" title="删除" ng-click="deleTableRow($index)"><i class="fa fa-trash-o"></i> 删除</button></td>
+							</tr>
+
+							</tbody>
+						</table>
+
+					</td>
+				</tr>
 		      	
-		      	<tr>
+		      	<!--<tr>
 		      		<td>扩展属性</td>
 		      		<td>
 		      			<div class="btn-group">
-                             <button type="button" class="btn btn-default" title="新增扩展属性" ng-click="addTableRow()"><i class="fa fa-file-o"></i> 新增扩展属性</button>
-                                                                    
+                             &lt;!&ndash;<button type="button" class="btn btn-default" title="新增扩展属性" ng-click="addTableRow()"><i class="fa fa-file-o"></i> 新增扩展属性</button>&ndash;&gt;
+							<button type="button" class="btn btn-default" title="新增扩展属性"
+									ng-click="addTableRow()"><i class="fa fa-file-o"></i> 新增扩展属性</button>
                         </div>
 						<table class="table table-bordered table-striped"  width="800px">
 							<thead>
@@ -162,17 +231,21 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="pojo in entity.customAttributeItems">
+								<tr ng-repeat="pojo in entity.customAtrributeItems">
 									<td><input type="checkbox" class="icheckbox_square-blue" ></td>
 									<td><input class="form-control" placeholder="属性名称" ng-model="pojo.text"></td>
 									<td><button type="button" class="btn btn-default" title="删除" ng-click="deleTableRow($index)"><i class="fa fa-trash-o"></i> 删除</button></td>
 								</tr>
-								
+								&lt;!&ndash;<tr>
+									<td><input type="checkbox" class="icheckbox_square-blue" ></td>
+									<td><input class="form-control" placeholder="属性名称" ></td>
+									<td><button type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 删除</button></td>
+								</tr>&ndash;&gt;
 							</tbody>
 						</table>	
            
 		      		</td>
-		      	</tr>	
+		      	</tr>-->
 		      	      
 			 </table>				
 			

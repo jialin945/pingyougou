@@ -42,7 +42,21 @@ app.controller('baseController',function ($scope) {
         }
     };
 
+    //提取 json 字符串数据中某个属性，返回拼接字符串 逗号分隔
+    $scope.jsonToString=function (jsonString,key){
+        //将 json 字符串转换为 json 对象
+        var json = JSON.parse(jsonString);
 
+        var value = "";
+        for(var i = 0; i < json.length; i++) {
+            if(i>0){
+                value += ",";
+            }
+            value += json[i][key];
+        }
+
+        return value;
+    }
 
 
 
