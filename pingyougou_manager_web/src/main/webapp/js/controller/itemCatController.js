@@ -10,7 +10,7 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 				$scope.list=response;
 			}			
 		);
-	}    
+	} ;
 	
 	//分页
 	$scope.findPage=function(page,rows){			
@@ -20,7 +20,7 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
-	}
+	};
 	
 	//查询实体 
 	$scope.findOne=function(id){				
@@ -29,7 +29,7 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 				$scope.entity= response;					
 			}
 		);				
-	}
+	};
 	
 	//保存 
 	$scope.save=function(){				
@@ -37,33 +37,38 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 		if($scope.entity.id!=null){//如果有ID
 			serviceObject=itemCatService.update( $scope.entity ); //修改  
 		}else{
+			$scope.entity.id=$scope.parentId;//赋予上级ID
 			serviceObject=itemCatService.add( $scope.entity  );//增加 
 		}				
 		serviceObject.success(
 			function(response){
 				if(response.success){
 					//重新查询 
-		        	$scope.reloadList();//重新加载
+		        	//$scope.reloadList();//重新加载
+                    $scope.findByParentId($scope.parentId);
 				}else{
 					alert(response.message);
 				}
 			}		
 		);				
-	}
+	};
 	
 	 
 	//批量删除 
 	$scope.dele=function(){			
-		//获取选中的复选框			
-		itemCatService.dele( $scope.selectIds ).success(
-			function(response){
-				if(response.success){
-					$scope.reloadList();//刷新列表
-					$scope.selectIds=[];
-				}						
-			}		
-		);				
-	}
+		//获取选中的复选框
+		if(confirm("确定要删除吗?")){
+            itemCatService.dele($scope.selectIds).success(
+                function (response) {
+                    if (response.success) {
+                        $scope.reloadList();//刷新列表
+                        $scope.selectIds = [];
+                    }
+                }
+            );
+
+		}
+	};
 	
 	$scope.searchEntity={};//定义搜索对象 
 	
@@ -75,6 +80,60 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
-	}
+	};
+
+
+
+    $scope.parentId=0;//上级 ID
+
+	//根据上级ID显示下级列表
+	$scope.findByParentId=function (parentId) {
+
+		$scope.parentId=parentId;//记住上级id
+
+		itemCatService.findByParentId(parentId).success(
+			function (response) {
+				$scope.list=response;
+            }
+		);
+    };
+
+
+    //设置级别 123 默认是1
+    $scope.grade=1;
+	$scope.setGrade=function (value) {
+		$scope.grade=value;
+    };
+
+	//读取列表
+	$scope.selectList=function (p_entity) {
+		//alert($scope.grade);
+
+		if($scope.grade==1){//如果为 1 级
+			$scope.entity_1=null;
+			$scope.entity_2=null;
+		}
+
+		if($scope.grade==2){//如果为 2 级
+			$scope.entity_1=p_entity;
+            $scope.entity_2=null;
+		}
+
+		if($scope.grade==3){//如果为 3 级
+			$scope.entity_2=p_entity;
+
+		}
+
+        $scope.findByParentId(p_entity.id);//查询此级下级列表
+
+    };
+
+
+
+
+
+
+
+
     
 });	

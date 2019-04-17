@@ -5,23 +5,66 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <!-- 以下页面不被拦截 -->
-    <http pattern="/login.html" security="none"></http>
+
+    <!-- 设置页面不登陆也可以访问 -->
+    <http pattern="/*.html" security="none"></http>
     <http pattern="/css/**" security="none"></http>
     <http pattern="/img/**" security="none"></http>
     <http pattern="/js/**" security="none"></http>
     <http pattern="/plugins/**" security="none"></http>
 
-    <!-- 页面拦截规则 -->
+    <!-- 页面的拦截规则    use-expressions:是否启动SPEL表达式 默认是true -->
     <http use-expressions="false">
-        <!--拦截所有只有ROLE_ADMIN采用权限访问-->
+        <!-- 当前用户必须有ROLE_USER的角色 才可以访问根目录及所属子目录的资源 -->
+        <intercept-url pattern="/**" access="ROLE_ADMIN"/>
+        <!-- 开启表单登陆功能 -->
+        <form-login  login-page="/login.html" default-target-url="/admin/index.html" authentication-failure-url="/login.html" always-use-default-target="true"/>
+        <csrf disabled="true"/>
+        <headers>
+            <frame-options policy="SAMEORIGIN"/>
+        </headers>
+        <logout/>
+    </http>
+
+    <!-- 认证管理器 -->
+    <authentication-manager>
+        <authentication-provider>
+            <user-service>
+                <user name="admin" password="admin" authorities="ROLE_ADMIN"/>
+                <user name="user" password="123456" authorities="ROLE_ADMIN"/>
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- 以下页面不被拦截 -->
+    <!--<http pattern="/*.html" security="none"></http>
+    <http pattern="/css/**" security="none"></http>
+    <http pattern="/img/**" security="none"></http>
+    <http pattern="/js/**" security="none"></http>
+    <http pattern="/plugins/**" security="none"></http>
+
+    &lt;!&ndash; 页面拦截规则 &ndash;&gt;
+    <http use-expressions="false">
+        &lt;!&ndash;拦截所有只有ROLE_ADMIN采用权限访问&ndash;&gt;
         <intercept-url pattern="/*" access="ROLE_ADMIN"></intercept-url>
 
-        <!--设置登陆相关的页面信息-->
+        &lt;!&ndash;设置登陆相关的页面信息&ndash;&gt;
         <form-login login-page="/login.html" default-target-url="/admin/index.html"
                     authentication-failure-url="/login.html" always-use-default-target="true"></form-login>
 
-        <!--关闭-->
+        &lt;!&ndash;关闭&ndash;&gt;
         <csrf disabled="true"></csrf>
 
         <headers>
@@ -33,7 +76,7 @@
     </http>
 
 
-    <!-- 认证管理器 -->
+    &lt;!&ndash; 认证管理器 &ndash;&gt;
     <authentication-manager>
         <authentication-provider>
             <user-service>
@@ -42,7 +85,7 @@
             </user-service>
         </authentication-provider>
 
-    </authentication-manager>
+    </authentication-manager>-->
 
 
 </beans:beans>

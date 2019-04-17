@@ -18,6 +18,7 @@
     <http pattern="/js/**" security="none"></http>
     <http pattern="/plugins/**" security="none"></http>
     <http pattern="/seller/add.do" security="none"></http>
+    <!--<http pattern="/login/name.do" security="none"></http>-->
 
     <!-- 页面的拦截规则    use-expressions:是否启动SPEL表达式 默认是true -->
     <http use-expressions="false">

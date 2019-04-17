@@ -98,6 +98,8 @@
             <!--<version>4.1.0.RELEASE</version>-->
         </dependency>
 
+
+
         <dependency>
             <groupId>com.pingyougou</groupId>
             <artifactId>pingyougou_sellergoods_interface</artifactId>
