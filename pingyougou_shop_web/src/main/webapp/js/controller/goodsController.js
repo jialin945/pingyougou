@@ -51,7 +51,7 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,up
 				if(response.success){
 					//重新查询 
 		        	//$scope.reloadList();//重新加载
-					alert("保存成功");
+					alert("新增成功");
 					$scope.entity={};
                     editor.html("");//清空富文本编辑器
 
@@ -90,6 +90,7 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,up
 
 
 	//上传图片
+    //$scope.image_entity={};
 	$scope.uploadFile=function () {
 		uploadService.uploadFile().success(
 			function (response) {
@@ -101,13 +102,11 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,up
 					alert(response.message);
 				}
             }
-		).error(function () {
-			alert("上传发生错误");
-        });
+		);
     };
 
     //定义页面实体结构
-	$scope={goods:{},goodsDesc:{itemImages:[]}};
+	$scope.entity={goods:{},goodsDesc:{itemImages:[]}};
 
     //添加图片列表
 	$scope.add_image_entity=function () {
