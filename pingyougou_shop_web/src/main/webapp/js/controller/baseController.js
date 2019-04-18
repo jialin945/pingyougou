@@ -58,6 +58,17 @@ app.controller('baseController',function ($scope) {
         return value;
     }
 
+    //[{“attributeName”:”规格名称”,”attributeValue”:[“规格选项 1”,“规格选项 2”.... ] } , .... ]
+    //从集合中按照 key 查询对象
+    $scope.searchObjectByKey=function (list, key, keyValue) {
+        for(var i = 0; i < list.length; i++) {
+          if(list[i][key]==keyValue){
+              return list[i];
+          }
+        }
+        return null;
+    }
+
 
 
 
