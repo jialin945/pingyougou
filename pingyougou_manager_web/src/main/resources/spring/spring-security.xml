@@ -58,7 +58,7 @@
     &lt;!&ndash; 页面拦截规则 &ndash;&gt;
     <http use-expressions="false">
         &lt;!&ndash;拦截所有只有ROLE_ADMIN采用权限访问&ndash;&gt;
-        <intercept-url pattern="/*" access="ROLE_ADMIN"></intercept-url>
+        <intercept-url pattern="/**" access="ROLE_ADMIN"></intercept-url>
 
         &lt;!&ndash;设置登陆相关的页面信息&ndash;&gt;
         <form-login login-page="/login.html" default-target-url="/admin/index.html"

@@ -1,6 +1,6 @@
  //控制层
  ////商品控制层（商家后台）
-app.controller('goodsController' ,function($scope,$controller   ,goodsService,uploadService,itemCatService){
+app.controller('goodsController' ,function($scope,$controller   ,goodsService,uploadService,itemCatService,typeTemplateService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -159,6 +159,27 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,up
 				$scope.entity.goods.typeTemplateId=response.typeId;
             }
 		);
+    });
+
+
+    //模板 ID 选择后 更新品牌列表
+	$scope.$watch('entity.goods.typeTemplateId',function (newValue, oldValue) {
+        typeTemplateService.findOne(newValue).success(
+        	function (response) {
+        		//获取类型模板
+				$scope.typeTemplate=response;
+				alert($scope.typeTemplate.brandIds);
+				//获取品牌列表
+                $scope.typeTemplate.brandIds = JSON.parse($scope.typeTemplate.brandIds);
+
+               	//扩展属性 在用户更新模板 ID 时，读取模板中的扩展属性赋给商品的扩展属
+                //性
+                $scope.entity.goodsDesc.customAttributeItems = JSON.parse( $scope.typeTemplate.customAttributeItems);
+
+        	}
+		);
+
+
     })
 
 
