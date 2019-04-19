@@ -96,10 +96,10 @@ app.controller('goodsController', function ($scope, $controller, goodsService, u
                 if (response.success) {//如果上传成功，取出 url
                     //debugger;
                     alert("上传成功");
-                    $scope.image_entity.url = response.massage;//设置文件地址
+                    $scope.image_entity.url = response.message;//设置文件地址
                 } else {
-                    //massage 注意 message
-                    alert(response.massage);
+                    //message 注意 message
+                    alert(response.message);
                 }
             }
         );

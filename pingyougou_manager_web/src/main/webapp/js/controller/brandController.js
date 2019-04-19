@@ -60,7 +60,7 @@ app.controller("brandController",function ($scope,$controller,brandService) {
                 if(response.success){
                     $scope.reloadList();//重新加载 重新查询
                 }else{
-                    alert(response.massage);
+                    alert(response.message);
                 }
             }
         );
