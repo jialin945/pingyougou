@@ -1,6 +1,6 @@
 //控制层
 ////商品控制层（商家后台）
-app.controller('goodsController', function ($scope, $controller, goodsService, uploadService, itemCatService, typeTemplateService) {
+app.controller('goodsController', function ($scope, $controller, $location, goodsService, uploadService, itemCatService, typeTemplateService) {
 
     $controller('baseController', {$scope: $scope});//继承
 
@@ -21,10 +21,48 @@ app.controller('goodsController', function ($scope, $controller, goodsService, u
                 $scope.paginationConf.totalItems = response.total;//更新总记录数
             }
         );
-    }
+    };
+
 
     //查询实体
-    $scope.findOne = function (id) {
+    $scope.findOne = function () {
+        var id = $location.search()['id'];//获取参数值
+        if (id == null) {
+            return null;
+        }
+        goodsService.findOne(id).success(
+            function (response) {
+                $scope.entity = response;
+                //向富文本编辑器添加商品介绍
+                editor.html($scope.entity.goodsDesc.introduction);
+                //显示图片列表 字符串转为json对象
+                $scope.entity.goodsDesc.itemImages = JSON.parse($scope.entity.goodsDesc.itemImages);
+                //显示扩展信息
+                //$scope.entity.goodsDesc.customAtrributeItems = JSON.parse($scope.entity.goodsDesc.customAttributeItems);
+                $scope.entity.goodsDesc.customAttributeItems= JSON.parse($scope.entity.goodsDesc.customAttributeItems);
+                //规格
+                $scope.entity.goodsDesc.specificationItems = JSON.parse($scope.entity.goodsDesc.specificationItems);
+
+                //[spec:{"机身内存":"16G","网络":"电信3G"}] 数组  spec是列名
+                //SKU 列表规格列转换
+                for(var i = 0; i < $scope.entity.itemList.length; i++) {
+                    $scope.entity.itemList[i].spec = JSON.parse($scope.entity.itemList[i].spec);
+                }
+
+
+            }
+        );
+
+
+    };
+
+
+    //根据规格名称和选项名称返回是否被勾选
+
+
+
+    //查询实体1
+    $scope.findOne1 = function (id) {
         goodsService.findOne(id).success(
             function (response) {
                 $scope.entity = response;
@@ -55,7 +93,8 @@ app.controller('goodsController', function ($scope, $controller, goodsService, u
                     editor.html("");//清空富文本编辑器
 
                 } else {
-                    alert(response.mssage);a
+                    alert(response.mssage);
+                    a
                 }
             }
         );
@@ -174,7 +213,10 @@ app.controller('goodsController', function ($scope, $controller, goodsService, u
 
                 //扩展属性 在用户更新模板 ID 时，读取模板中的扩展属性赋给商品的扩展属
                 //性
-                $scope.entity.goodsDesc.customAttributeItems = JSON.parse($scope.typeTemplate.customAttributeItems);
+                if ($location.search()['id']==null) {//如果是增加商品
+
+                    $scope.entity.goodsDesc.customAttributeItems = JSON.parse($scope.typeTemplate.customAttributeItems);
+                }
 
             }
         );
@@ -195,11 +237,11 @@ app.controller('goodsController', function ($scope, $controller, goodsService, u
             if (object != null) {//对象存在
                 if ($event.target.checked) {//是勾选状态
                     object.attributeValue.push(value);
-                }else{//取消勾选
-                    object.attributeValue.splice( object.attributeValue.indexOf(value), 1);
+                } else {//取消勾选
+                    object.attributeValue.splice(object.attributeValue.indexOf(value), 1);
                     //如果选项都取消了，将此条记录移除
-                    if(object.attributeValue.length==0){
-                        $scope.entity.goodsDesc.specificationItems.splice($scope.entity.goodsDesc.specificationItems.indexOf(object),1);
+                    if (object.attributeValue.length == 0) {
+                        $scope.entity.goodsDesc.specificationItems.splice($scope.entity.goodsDesc.specificationItems.indexOf(object), 1);
                     }
                 }
 
@@ -210,22 +252,22 @@ app.controller('goodsController', function ($scope, $controller, goodsService, u
         };
 
         //创建 SKU 列表
-        $scope.createItemList=function () {
+        $scope.createItemList = function () {
             //初始化集合
-            $scope.entity.itemList=[{spec:{},price:0,num:99999,status:'0',isDefault:'0'}];
-            var items=$scope.entity.goodsDesc.specificationItems;
-            for(var i = 0; i < items.length; i++) {
+            $scope.entity.itemList = [{spec: {}, price: 0, num: 99999, status: '0', isDefault: '0'}];
+            var items = $scope.entity.goodsDesc.specificationItems;
+            for (var i = 0; i < items.length; i++) {
                 //调用addColumn方法 将结果赋值给entity.itemList,
-                $scope.entity.itemList=addColumn($scope.entity.itemList,items[i].attributeName,items[i].attributeValue);
+                $scope.entity.itemList = addColumn($scope.entity.itemList, items[i].attributeName, items[i].attributeValue);
             }
         };
 
         //添加列值
-        addColumn=function (list, columnName, columnValues) {
+        addColumn = function (list, columnName, columnValues) {
             var newList = [];
-            for(var i = 0; i < list.length; i++) {
+            for (var i = 0; i < list.length; i++) {
                 var oldRow = list[i];
-                for(var j = 0; j < columnValues.length; j++) {
+                for (var j = 0; j < columnValues.length; j++) {
                     //深克隆
                     var newRow = JSON.parse(JSON.stringify(oldRow));
                     newRow.spec[columnName] = columnValues[j];
@@ -237,6 +279,45 @@ app.controller('goodsController', function ($scope, $controller, goodsService, u
 
 
     });
+
+    //商品状态
+    $scope.status = ['未审核', '已审核', '审核通过', '关闭'];//0,1,2,3 下标
+
+    //定义商品分类列表
+    $scope.itemCatList = [];
+    //加载商品分类列表
+    $scope.findItemCatList = function () {
+        itemCatService.findAll().success(
+            function (response) {
+                for (var i = 0; i < response.length; i++) {
+                    //因为我们需要根据分类 ID 得到分类名称，所以我们将返回的分页结果以数组形式再次封装
+                    $scope.itemCatList[response[i].id] = response[i].name;
+                }
+            }
+        );
+    };
+
+
+    //根据规格名称和选项名称返回是否被勾选
+    //tb_good_desc 表 列 specification_items
+    //[{"attributeName":"网络制式","attributeValue":["移动3G","移动4G"]},{"attributeName":"屏幕尺寸","attributeValue":["6寸","5.5寸"]}]
+    $scope.checkAttributeValue=function (specName,optionValue) {
+        var items= $scope.entity.goodsDesc.specificationItems;
+        var object = $scope.searchObjectByKey(items, 'attributeName', specName);
+
+        if(object!=null){
+            //索引位置从0开始
+            if(object.attributeValue.indexOf(optionValue)>=0){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+
+    }
+
 
 
 });
