@@ -71,30 +71,34 @@ app.controller('goodsController', function ($scope, $controller, $location, good
     }
 
     //保存
-    $scope.add = function () {
-        /*var serviceObject;//服务层对象
-        if($scope.entity.id!=null){//如果有ID
+    $scope.save = function () {
+        var serviceObject;//服务层对象
+        if($scope.entity.goods.id!=null){//如果有ID
             serviceObject=goodsService.update( $scope.entity ); //修改
         }else{
             serviceObject=goodsService.add( $scope.entity  );//增加
-        }*/
+        }
 
-
+        //提取文本编辑器的值
         $scope.entity.goodsDesc.introduction = editor.html();
 
-        goodsService.add($scope.entity).success(
+        serviceObject.success(
             function (response) {
 
                 if (response.success) {
+
+                    //跳转到商品列表页
+                    location.href = "goods.html";
+
                     //重新查询
                     //$scope.reloadList();//重新加载
-                    alert("新增成功");
-                    $scope.entity = {};
-                    editor.html("");//清空富文本编辑器
+                    /*alert("新增成功");
+                    $scope.entity = {};*/
+                    //editor.html("");//清空富文本编辑器
 
                 } else {
                     alert(response.mssage);
-                    a
+
                 }
             }
         );
