@@ -97,7 +97,8 @@ app.controller('goodsController', function ($scope, $controller, $location, good
                     //editor.html("");//清空富文本编辑器
 
                 } else {
-                    alert(response.mssage);
+                    alert("1111111111");
+                    alert(response.message);
 
                 }
             }
@@ -286,6 +287,9 @@ app.controller('goodsController', function ($scope, $controller, $location, good
 
     //商品状态
     $scope.status = ['未审核', '已审核', '审核通过', '关闭'];//0,1,2,3 下标
+
+    //上架状态
+    //$scope.marketable = ['上架','下架'];
 
     //定义商品分类列表
     $scope.itemCatList = [];

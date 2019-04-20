@@ -34,6 +34,7 @@ app.controller('baseController',function ($scope) {
     //用户勾选复选框
     $scope.updateSelection=function ($event, id) {
         if($event.target.checked){//如果是被选中,则增加到数组
+            //debugger;
             $scope.selectIds.push(id);
         }else{
             var idx = $scope.selectIds.indexOf(id);
