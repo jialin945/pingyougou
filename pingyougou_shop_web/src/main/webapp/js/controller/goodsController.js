@@ -39,13 +39,13 @@ app.controller('goodsController', function ($scope, $controller, $location, good
                 $scope.entity.goodsDesc.itemImages = JSON.parse($scope.entity.goodsDesc.itemImages);
                 //显示扩展信息
                 //$scope.entity.goodsDesc.customAtrributeItems = JSON.parse($scope.entity.goodsDesc.customAttributeItems);
-                $scope.entity.goodsDesc.customAttributeItems= JSON.parse($scope.entity.goodsDesc.customAttributeItems);
+                $scope.entity.goodsDesc.customAttributeItems = JSON.parse($scope.entity.goodsDesc.customAttributeItems);
                 //规格
                 $scope.entity.goodsDesc.specificationItems = JSON.parse($scope.entity.goodsDesc.specificationItems);
 
                 //[spec:{"机身内存":"16G","网络":"电信3G"}] 数组  spec是列名
                 //SKU 列表规格列转换
-                for(var i = 0; i < $scope.entity.itemList.length; i++) {
+                for (var i = 0; i < $scope.entity.itemList.length; i++) {
                     $scope.entity.itemList[i].spec = JSON.parse($scope.entity.itemList[i].spec);
                 }
 
@@ -60,7 +60,6 @@ app.controller('goodsController', function ($scope, $controller, $location, good
     //根据规格名称和选项名称返回是否被勾选
 
 
-
     //查询实体1
     $scope.findOne1 = function (id) {
         goodsService.findOne(id).success(
@@ -73,10 +72,11 @@ app.controller('goodsController', function ($scope, $controller, $location, good
     //保存
     $scope.save = function () {
         var serviceObject;//服务层对象
-        if($scope.entity.goods.id!=null){//如果有ID
-            serviceObject=goodsService.update( $scope.entity ); //修改
-        }else{
-            serviceObject=goodsService.add( $scope.entity  );//增加
+        if ($scope.entity.goods.id != null) {//如果有ID
+            serviceObject = goodsService.update($scope.entity); //修改
+        } else {
+            //debugger;
+            serviceObject = goodsService.add($scope.entity);//增加
         }
 
         //提取文本编辑器的值
@@ -218,7 +218,7 @@ app.controller('goodsController', function ($scope, $controller, $location, good
 
                 //扩展属性 在用户更新模板 ID 时，读取模板中的扩展属性赋给商品的扩展属
                 //性
-                if ($location.search()['id']==null) {//如果是增加商品
+                if ($location.search()['id'] == null) {//如果是增加商品
 
                     $scope.entity.goodsDesc.customAttributeItems = JSON.parse($scope.typeTemplate.customAttributeItems);
                 }
@@ -226,7 +226,7 @@ app.controller('goodsController', function ($scope, $controller, $location, good
             }
         );
 
-        //查询规格列表
+        //查询规格列表  是 map集合
         typeTemplateService.findSpecList(newValue).success(
             function (response) {
                 $scope.specList = response;
@@ -256,6 +256,26 @@ app.controller('goodsController', function ($scope, $controller, $location, good
             }
         };
 
+
+        $scope.updateSpecAttribute1 = function ($event, name, value) {
+            //调用方法查询是否有这个对象
+            var object = $scope.searchObjectByKey(entity.goodsDesc.specificationItems, 'attributeName', name);
+            if (object != null) {
+                if ($event.target.checked) {//勾选状态
+                    object.attributeValue.push(value);
+                } else {//没有勾选
+                    object.attributeValue.splice(object.attributeValue.indexOf(value), 1);
+                    if (object.attributeValue.length == 0) {//直接将这个对象移除
+                        $scope.entity.goodsDesc.specificationItems.splice($scope.entity.goodsDesc.specificationItems.indexOf(object), 1);
+                    }
+                }
+            } else {
+                $scope.entity.goodsDesc.specificationItems.push({'attributeName': name, 'attributeValue': value});
+            }
+        };
+
+
+
         //创建 SKU 列表
         $scope.createItemList = function () {
             //初始化集合
@@ -276,11 +296,26 @@ app.controller('goodsController', function ($scope, $controller, $location, good
                     //深克隆
                     var newRow = JSON.parse(JSON.stringify(oldRow));
                     newRow.spec[columnName] = columnValues[j];
+                    //newRow.spec['username'] = 'zhangsan';
                     newList.push(newRow);
                 }
             }
             return newList;
-        }
+        };
+
+
+        addColumn1=function (list, columnName, columnValues) {
+            var newList;
+            for(var i = 0; i < list.length; i++) {
+                var oldRow = list[i];
+                for(var j = 0; j < columnValues.length; j++) {
+                    var newRow = JSON.parse(JSON.stringify(oldRow));
+                    newRow.spec[columnName] = columnValues[j];
+                    newList.push(newRow);
+                }
+            }
+            return newList;
+        };
 
 
     });
@@ -289,7 +324,7 @@ app.controller('goodsController', function ($scope, $controller, $location, good
     $scope.status = ['未审核', '已审核', '审核通过', '关闭'];//0,1,2,3 下标
 
     //上架状态
-    //$scope.marketable = ['上架','下架'];
+    $scope.marketable = ['下架', '上架'];
 
     //定义商品分类列表
     $scope.itemCatList = [];
@@ -309,23 +344,22 @@ app.controller('goodsController', function ($scope, $controller, $location, good
     //根据规格名称和选项名称返回是否被勾选
     //tb_good_desc 表 列 specification_items
     //[{"attributeName":"网络制式","attributeValue":["移动3G","移动4G"]},{"attributeName":"屏幕尺寸","attributeValue":["6寸","5.5寸"]}]
-    $scope.checkAttributeValue=function (specName,optionValue) {
-        var items= $scope.entity.goodsDesc.specificationItems;
+    $scope.checkAttributeValue = function (specName, optionValue) {
+        var items = $scope.entity.goodsDesc.specificationItems;
         var object = $scope.searchObjectByKey(items, 'attributeName', specName);
 
-        if(object!=null){
+        if (object != null) {
             //索引位置从0开始
-            if(object.attributeValue.indexOf(optionValue)>=0){
+            if (object.attributeValue.indexOf(optionValue) >= 0) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
 
     }
-
 
 
 });

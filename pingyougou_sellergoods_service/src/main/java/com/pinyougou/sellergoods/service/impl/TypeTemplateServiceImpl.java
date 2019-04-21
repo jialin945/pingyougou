@@ -124,7 +124,9 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
     public List<Map> findSpecList(Long id) {
         //查询模板
         TbTypeTemplate typeTemplate = typeTemplateMapper.selectByPrimaryKey(id);
+        //[{"id":33,"text":"电视屏幕尺寸"},{"id":32,"text":"机身内存"},{"id":26,"text":"尺码"}]
         List<Map> list = JSON.parseArray(typeTemplate.getSpecIds(), Map.class);
+        //添加 options 集合  specName
         for (Map map : list) {
             //查询规格选项列表
             TbSpecificationOptionExample example = new TbSpecificationOptionExample();

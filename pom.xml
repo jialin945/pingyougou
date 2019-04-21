@@ -15,6 +15,10 @@
         <module>pingyougou_sellergoods_service</module>
         <module>pingyougou_manager_web</module>
         <module>pingyougou_shop_web</module>
+        <module>pingyougou_content_interface</module>
+        <module>pingyougou_content_service</module>
+        <module>pingyougou_portal_web</module>
+
     </modules>
     <packaging>pom</packaging>
 

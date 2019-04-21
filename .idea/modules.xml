@@ -3,10 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/pingyougou_common/pingyougou_common.iml" filepath="$PROJECT_DIR$/pingyougou_common/pingyougou_common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_content_interface/pingyougou_content_interface.iml" filepath="$PROJECT_DIR$/pingyougou_content_interface/pingyougou_content_interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_content_service/pingyougou_content_service.iml" filepath="$PROJECT_DIR$/pingyougou_content_service/pingyougou_content_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_dao/pingyougou_dao.iml" filepath="$PROJECT_DIR$/pingyougou_dao/pingyougou_dao.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_manager_web/pingyougou_manager_web.iml" filepath="$PROJECT_DIR$/pingyougou_manager_web/pingyougou_manager_web.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_parent.iml" filepath="$PROJECT_DIR$/pingyougou_parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_pojo/pingyougou_pojo.iml" filepath="$PROJECT_DIR$/pingyougou_pojo/pingyougou_pojo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_portal_web/pingyougou_portal_web.iml" filepath="$PROJECT_DIR$/pingyougou_portal_web/pingyougou_portal_web.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_sellergoods_interface/pingyougou_sellergoods_interface.iml" filepath="$PROJECT_DIR$/pingyougou_sellergoods_interface/pingyougou_sellergoods_interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_sellergoods_service/pingyougou_sellergoods_service.iml" filepath="$PROJECT_DIR$/pingyougou_sellergoods_service/pingyougou_sellergoods_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_shop_web/pingyougou_shop_web.iml" filepath="$PROJECT_DIR$/pingyougou_shop_web/pingyougou_shop_web.iml" />
