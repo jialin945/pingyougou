@@ -102,7 +102,7 @@ public class ContentController {
 	
 		/**
 	 * 查询+分页
-	 * @param table2
+	 * @param content
 	 * @param page
 	 * @param rows
 	 * @return

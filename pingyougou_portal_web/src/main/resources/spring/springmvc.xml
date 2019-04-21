@@ -10,7 +10,7 @@
 
 
 
-	<context:property-placeholder location="classpath:config/application.properties" />
+	<!--<context:property-placeholder location="classpath:config/application.properties" />-->
 
 	<mvc:annotation-driven>
 		<mvc:message-converters register-defaults="true">
