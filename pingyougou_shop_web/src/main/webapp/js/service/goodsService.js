@@ -31,4 +31,9 @@ app.service('goodsService',function($http){
 		return $http.post('../goods/search.do?page='+page+"&rows="+rows, searchEntity);
 	}
 	//是否上架
+	this.updateMarketable=function (ids,mark) {
+
+        return $http.get('../goods/updateMarketable.do?ids='+ids+'&mark='+mark);
+    }
+
 });

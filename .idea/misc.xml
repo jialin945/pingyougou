@@ -4,6 +4,8 @@
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_content_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_manager_web" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_portal_web" />
+    <file type="web" url="file://$PROJECT_DIR$/pingyougou_search_service" />
+    <file type="web" url="file://$PROJECT_DIR$/pingyougou_search_web" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_sellergoods_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_shop_web" />
   </component>

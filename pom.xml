@@ -18,6 +18,10 @@
         <module>pingyougou_content_interface</module>
         <module>pingyougou_content_service</module>
         <module>pingyougou_portal_web</module>
+        <module>pingyougou_solr_util</module>
+        <module>pingyougou_search_interface</module>
+        <module>pingyougou_search_service</module>
+        <module>pingyougou_search_web</module>
 
     </modules>
     <packaging>pom</packaging>

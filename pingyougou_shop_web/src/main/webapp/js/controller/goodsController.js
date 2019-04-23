@@ -26,6 +26,7 @@ app.controller('goodsController', function ($scope, $controller, $location, good
 
     //查询实体
     $scope.findOne = function () {
+        //#?id=id&url=url
         var id = $location.search()['id'];//获取参数值
         if (id == null) {
             return null;
@@ -323,8 +324,7 @@ app.controller('goodsController', function ($scope, $controller, $location, good
     //商品状态
     $scope.status = ['未审核', '已审核', '审核通过', '关闭'];//0,1,2,3 下标
 
-    //上架状态
-    $scope.marketable = ['下架', '上架'];
+
 
     //定义商品分类列表
     $scope.itemCatList = [];
@@ -359,7 +359,25 @@ app.controller('goodsController', function ($scope, $controller, $location, good
             return false;
         }
 
-    }
+    };
+
+    //上架状态
+    $scope.marketable = ['下架', '上架'];
+    $scope.updateMarketable=function (mark) {
+        //var mark=$location.search()['isMarketable'];
+        goodsService.updateMarketable($scope.selectIds,mark).success(
+            function (response) {
+                if(response.success){
+
+                    alert(response.message);
+
+                    window.location.reload();
+                }else{
+                    alert(response.message)
+                }
+            }
+        );
+    };
 
 
 });
