@@ -141,7 +141,7 @@ public class ContentServiceImpl implements ContentService {
 			Criteria criteria = example.createCriteria();
 			criteria.andCategoryIdEqualTo(categoryId);
 			criteria.andStatusEqualTo("1");//开启状态
-			example.setOrderByClause("sort_order");//排序
+			example.setOrderByClause("sort_order");//排序 order by  列名必须一致 不是属性名
 
 			list = contentMapper.selectByExample(example);//获取广告列表
 			//存入缓存

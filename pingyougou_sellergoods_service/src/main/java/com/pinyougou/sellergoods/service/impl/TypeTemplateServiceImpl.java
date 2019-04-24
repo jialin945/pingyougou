@@ -18,6 +18,7 @@ import com.pinyougou.pojo.TbTypeTemplateExample.Criteria;
 import com.pinyougou.sellergoods.service.TypeTemplateService;
 
 import entity.PageResult;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -92,6 +93,29 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         }
     }
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    /**
+     * 将数据存入缓存
+     */
+    private void saveToRedis(){
+        //获取模板数据
+        List<TbTypeTemplate> typeTemplates = findAll();
+        //循环模板  注意增加for 不能对原集合对象元素进行增删操作
+        for (TbTypeTemplate typeTemplate : typeTemplates) {
+            //存储品牌列表 先将品牌列表字符串转成对象
+            List<Map> brandList = JSON.parseArray(typeTemplate.getBrandIds(), Map.class);
+            redisTemplate.boundHashOps("brandList").put(typeTemplate.getId(), brandList);
+
+            //存储规格列表 原有的规格列表没有规格选项options 需要调用方法添加进去 再存储
+            //根据模板 ID 查询规格列表
+            List<Map> specList = findSpecList(typeTemplate.getId());
+            redisTemplate.boundHashOps("specList").put(typeTemplate.getId(), specList);
+
+        }
+    }
+
 
     @Override
     public PageResult findPage(TbTypeTemplate typeTemplate, int pageNum, int pageSize) {
@@ -117,6 +141,10 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         }
 
         Page<TbTypeTemplate> page = (Page<TbTypeTemplate>) typeTemplateMapper.selectByExample(example);
+
+        saveToRedis();//将数据存入缓存
+        System.out.println("TbTypeTemplateServiceImpl:品牌列表和规格列表存入缓存中");
+
         return new PageResult(page.getTotal(), page.getResult());
     }
 
