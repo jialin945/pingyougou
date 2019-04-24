@@ -25,7 +25,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     private RedisTemplate redisTemplate;
 
     @Override
-    public Map<String, Object> search(Map searchMap){
+    public Map<String, Object> search(Map searchMap) {
         Map map = new HashMap();
         //1.查询列表  按关键字查询（高亮显示）
         Map map1 = searchList(searchMap);
@@ -36,10 +36,15 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         map.put("categoryList", categoryList);
 
         //3.查询品牌和规格列表
-
-        if(categoryList.size()>0){
-            map.putAll(searchBrandAndSpecList(categoryList.get(0)));
+        String category = (String) searchMap.get("category");
+        if ("".equals(category)) {
+            if (categoryList.size() > 0) {
+                map.putAll(searchBrandAndSpecList(categoryList.get(0)));
+            }
+        }else{
+            map.putAll(searchBrandAndSpecList(category));
         }
+
 
         System.out.println(map);
         return map;
@@ -48,10 +53,11 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
     /**
      * 查询品牌和规格列表
+     *
      * @param category 分类名称
      * @return
      */
-    private Map searchBrandAndSpecList(String category){
+    private Map searchBrandAndSpecList(String category) {
         Map map = new HashMap();
         //根据分类名称从缓存中获取模板id
         Long typeId = (Long) redisTemplate.boundHashOps("itemCat").get(category);
@@ -75,14 +81,15 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
     /**
      * 根据关键字查询商品分类
+     *
      * @param searchMap
      * @return
      */
-    private List searchCategoryList(Map searchMap){
+    private List searchCategoryList(Map searchMap) {
         List list = new ArrayList();
 
 
-        Query query=new SimpleQuery("*:*");//2
+        Query query = new SimpleQuery("*:*");//2
 
         //按照关键字查询  3  1 添加条件 2 创建条件对象 并指定是那个域 3 设置关键字是什么
         Criteria criteria = new Criteria("item_keywords");//where..
@@ -116,28 +123,65 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     }
 
 
-
     /**
      * 按关键字查询（高亮显示）
+     *
      * @param searchMap
      * @return
      */
-    private Map searchList(Map searchMap){
+    private Map searchList(Map searchMap) {
         Map map = new HashMap();
-
         HighlightQuery query = new SimpleHighlightQuery();//2
         //添加条件  3 1先创建条件对象 2设置条件的值  3再添加
-        Criteria criteria = new Criteria("item_keywords");
-        criteria.is(searchMap.get("keywords"));
-        query.addCriteria(criteria);
 
-        //设置高亮选项 4  1先创建高亮对象 2添加需要高亮显示的域 可以多个 设置前缀 和后缀
-        HighlightOptions highlightOptions=new HighlightOptions();
+        //设置高亮选项初始化 4  1先创建高亮对象 2添加需要高亮显示的域 可以多个 设置前缀 和后缀
+        HighlightOptions highlightOptions = new HighlightOptions();
         highlightOptions.addField("item_title");
         highlightOptions.setSimplePrefix("<em style='color:red'>");
         highlightOptions.setSimplePostfix("</em>");
         query.setHighlightOptions(highlightOptions);
 
+        //1.1 关键字查询
+        Criteria criteria = new Criteria("item_keywords");
+        criteria.is(searchMap.get("keywords"));
+        query.addCriteria(criteria);
+
+
+        //1.2 按分类筛选
+        if (!"".equals(searchMap.get("category"))) {
+            FilterQuery filterQuery = new SimpleFacetQuery();
+            Criteria filterCriteria = new Criteria("item_category");
+            filterCriteria.is(searchMap.get("category"));
+            filterQuery.addCriteria(filterCriteria);
+            query.addFilterQuery(filterQuery);
+        }
+
+        //1.3 按品牌筛选
+        if (!"".equals(searchMap.get("brand"))) {
+            FilterQuery filterQuery = new SimpleFacetQuery();
+            Criteria filterCriteria = new Criteria("item_brand");
+            filterCriteria.is(searchMap.get("brand"));
+            filterQuery.addCriteria(filterCriteria);
+            query.addFilterQuery(filterQuery);
+        }
+
+
+        //1.4 过滤规格
+        if (searchMap.get("spec") != null) {
+            Map<String, String> specMap = (Map<String, String>) searchMap.get("spec");
+            for (String key : specMap.keySet()) {
+                FilterQuery filterQuery = new SimpleFacetQuery();
+                Criteria filterCriteria = new Criteria("item_spec_" + key);
+                filterCriteria.is(searchMap.get(key));
+                filterQuery.addCriteria(filterCriteria);
+                query.addFilterQuery(filterQuery);
+            }
+
+
+        }
+
+
+        //---------------获取高亮结果集------------------
         //高亮页对象
         HighlightPage<TbItem> page = solrTemplate.queryForHighlightPage(query, TbItem.class);//1
 
@@ -149,7 +193,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             //获取高亮列表 (高亮域的个数)
             List<HighlightEntry.Highlight> highlights = entry.getHighlights();
             //判断后 设置高亮显示结果 也就是搜索的关键字进行高亮显示
-            if(highlights.size()>0 && highlights.get(0).getSnipplets().size()>0){
+            if (highlights.size() > 0 && highlights.get(0).getSnipplets().size() > 0) {
 
                 item.setTitle(highlights.get(0).getSnipplets().get(0));
             }
@@ -168,12 +212,6 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
         return map;
     }
-
-
-
-
-
-
 
 
     public Map<String, Object> search2(Map searchMap) {
@@ -196,6 +234,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
     /**
      * 根据关键字搜索列表
+     *
      * @param searchMap
      * @return
      */
@@ -203,7 +242,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     public Map<String, Object> search3(Map searchMap) {
         Map<String, Object> map = new HashMap<>();//0
 
-        HighlightQuery query=new SimpleHighlightQuery();//2
+        HighlightQuery query = new SimpleHighlightQuery();//2
 
         //设置高亮选项对象
         HighlightOptions highlightOptions = new HighlightOptions();//4
@@ -217,7 +256,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         query.setHighlightOptions(highlightOptions);//3
 
         //按照关键字查询  复制域
-        Criteria criteria=new Criteria("item_keywords");
+        Criteria criteria = new Criteria("item_keywords");
         criteria.is(searchMap.get("keywords"));
         query.addCriteria(criteria);
 
@@ -244,7 +283,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             //高亮列表(高亮域的个数)
             List<HighlightEntry.Highlight> highlights = entry.getHighlights();
             //判断
-            if(highlights.size()>0 && highlights.get(0).getSnipplets().size()>0){
+            if (highlights.size() > 0 && highlights.get(0).getSnipplets().size() > 0) {
                 //设置高亮的结果
                 item.setTitle(highlights.get(0).getSnipplets().get(0));
             }
@@ -254,7 +293,6 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
         return map;
     }
-
 
 
 }
