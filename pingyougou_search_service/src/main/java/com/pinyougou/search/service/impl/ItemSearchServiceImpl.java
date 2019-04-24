@@ -166,7 +166,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         }
 
 
-        //1.4 过滤规格
+        //1.4 按规格过滤
         if (searchMap.get("spec") != null) {
             Map<String, String> specMap = (Map<String, String>) searchMap.get("spec");
             for (String key : specMap.keySet()) {
@@ -176,9 +176,51 @@ public class ItemSearchServiceImpl implements ItemSearchService {
                 filterQuery.addCriteria(filterCriteria);
                 query.addFilterQuery(filterQuery);
             }
+        }
 
+
+        //1.5 按价格筛选
+        if(!"".equals(searchMap.get("price"))){
+            String[] prices = ((String) searchMap.get("price")).split("-");
+            //如果区间起点不等于 0
+            if (!prices[0].equals(0)) {
+                FilterQuery filterQuery = new SimpleFacetQuery();
+                Criteria filterCriteria = new Criteria("item_price").greaterThanEqual(prices[0]);
+                filterQuery.addCriteria(filterCriteria);
+                query.addFilterQuery(filterQuery);
+            }
+
+            //如果区间终点不等于*
+            if (!prices[1].equals("*")) {
+                FilterQuery filterQuery = new SimpleFacetQuery();
+                Criteria filterCriteria = new Criteria("item_price").lessThanEqual(prices[1]);
+                filterQuery.addCriteria(filterCriteria);
+                query.addFilterQuery(filterQuery);
+            }
 
         }
+
+        //1.6 分页查询
+        Integer pageNo = (Integer) searchMap.get("pageNo");//提取页码
+        if(pageNo==null){
+            pageNo=1;
+        }
+
+        Integer pageSize = (Integer) searchMap.get("pageSize");//每页记录数
+        if(pageSize==null){
+            pageSize=20;
+        }
+
+        query.setOffset((pageNo - 1) * pageSize);//从第几条记录查询
+        query.setRows(pageSize);//设置每页记录数
+
+
+
+
+
+
+
+
 
 
         //---------------获取高亮结果集------------------
@@ -209,6 +251,9 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         //获取的是原来实体内容  没有高亮内容  高亮内容需要高亮入口获取
         List<TbItem> list = page.getContent();
         map.put("rows", list);
+
+        map.put("totalPages", page.getTotalPages());//返回总页数
+        map.put("total", page.getTotalElements());//返回总记录数
 
         return map;
     }
