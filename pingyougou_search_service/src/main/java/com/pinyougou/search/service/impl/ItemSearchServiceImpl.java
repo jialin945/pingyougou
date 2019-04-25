@@ -26,6 +26,10 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
     @Override
     public Map<String, Object> search(Map searchMap) {
+        //关键字空格处理
+        String keywords = (String) searchMap.get("keywords");
+        searchMap.put("keywords", keywords.replace(" ", ""));
+
         Map map = new HashMap();
         //1.查询列表  按关键字查询（高亮显示）
         Map map1 = searchList(searchMap);

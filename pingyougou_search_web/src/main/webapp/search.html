@@ -83,7 +83,7 @@
 										<!--searchAutoComplete-->
 										<div class="input-append">
 											<input type="text" id="autocomplete" type="text" ng-model="searchMap.keywords" class="input-error input-xxlarge" />
-											<button class="sui-btn btn-xlarge btn-danger" ng-click="search()" type="button">搜索</button>
+											<button class="sui-btn btn-xlarge btn-danger" ng-click="searchMap.pageNo=1;search()" type="button">搜索</button>
 										</div>
 									</form>
 								</div>
@@ -142,7 +142,7 @@
 			</div>
 		</div>
 
-	
+
 	<!--list-content-->
 	<div class="main">
 		<div class="py-container">
@@ -152,7 +152,7 @@
 					搜索条件：
 					<!--<li>
 						<a href="#">全部结果</a>
-					</li>					
+					</li>
 					<li class="active">智能手机</li>-->
 
 				</ul>
@@ -645,9 +645,14 @@
 				<div class="fr page">
 					<div class="sui-pagination pagination-large">
 						<ul>
-							<li class="prev disabled">
-								<a href="#" ng-click="queryByPage(searchMap.pageNo-1)">«上一页</a>
+
+
+							<li class="prev {{isTopPage()?'disabled':''}}">
+								<a href="#"  ng-click="queryByPage(searchMap.pageNo-1)">«</a>
 							</li>
+
+                            <li class="dotted" ng-if="firstDot==true"><span>...</span></li>
+
 							<li ng-repeat="p in pageLabel">
 								<a href="#" ng-click="queryByPage(p)">{{p}}</a>
 							</li>
@@ -663,9 +668,10 @@
 							<li>
 								<a href="#">5</a>
 							</li>-->
-							<li class="dotted"><span>...</span></li>
-							<li class="next">
-								<a href="#" ng-click="queryByPage(searchMap.pageNo+1)">下一页»</a>
+							<li class="dotted" ng-if="lastDot==true"><span>...</span></li>
+
+							<li class="next {{isEndPage()?'disabled':''}}">
+								<a href="#" ng-click="queryByPage(searchMap.pageNo+1)">»</a>
 							</li>
 						</ul>
 						<div><span>共{{resultMap.totalPages}}页&nbsp;</span><span>
