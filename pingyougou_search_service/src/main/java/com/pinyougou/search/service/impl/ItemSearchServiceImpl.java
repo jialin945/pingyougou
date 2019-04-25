@@ -5,6 +5,7 @@ import com.alibaba.dubbo.container.page.Page;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
@@ -218,6 +219,25 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         query.setOffset((pageNo - 1) * pageSize);//从第几条记录查询
         query.setRows(pageSize);//设置每页记录数
 
+        //1.7 排序
+        String sortValue = (String) searchMap.get("sort");//ASC升序 DESC降序
+        String sortField = (String) searchMap.get("sortField");//排序字段
+
+        if(sortValue!=null && !"".equals(sortValue)){
+            if("ASC".equals(sortValue)){
+                Sort sort = new Sort(Sort.Direction.ASC, "item_" + sortField);
+                query.addSort(sort);
+            }
+
+            if("DESC".equals(sortValue)){
+                Sort sort = new Sort(Sort.Direction.DESC, "item_" + sortField);
+                query.addSort(sort);
+            }
+        }
+
+
+
+
 
 
 
@@ -341,6 +361,30 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         map.put("rows", page.getContent());
 
         return map;
+    }
+
+
+    /**
+     * 导入数据
+     */
+    @Override
+    public void importList(List list){
+        solrTemplate.saveBeans(list);
+        solrTemplate.commit();
+    }
+
+    /**
+     * 删除数据
+     * @param goodsIdList (spu)
+     */
+    @Override
+    public void deleteByGoodsIds(List goodsIdList) {
+        System.out.println("删除商品 ID"+goodsIdList);
+        Query query = new SimpleQuery("*:*");
+        Criteria criteria = new Criteria("item_goodsid").in(goodsIdList);
+        query.addCriteria(criteria);
+        solrTemplate.delete(query);
+        solrTemplate.commit();
     }
 
 

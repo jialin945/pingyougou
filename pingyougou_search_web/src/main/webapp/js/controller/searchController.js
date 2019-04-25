@@ -1,4 +1,4 @@
-app.controller("searchController", function ($scope, searchService) {
+app.controller("searchController", function ($scope,$location, searchService) {
     //搜索
     $scope.search = function () {
         //修改 search 方法, 在执行查询前，转换为 int 类型，否则提交到后端有可能变成字符串
@@ -20,9 +20,11 @@ app.controller("searchController", function ($scope, searchService) {
         'category': '',
         'brand': '',
         'spec': {},
-        price: '',
+        'price': '',
         'pageNo': 1,
-        'pageSize': 40
+        'pageSize': 40,
+        'sortField':'',
+        'sort':''
     };
 
     //添加搜索项
@@ -87,7 +89,7 @@ app.controller("searchController", function ($scope, searchService) {
             if (lastPage >= maxPageNo) {
                 lastPage = maxPageNo;
                 firstPage = maxPageNo - 4;//后5页
-                $scope.lastDot=false;
+                $scope.lastDot = false;
             }
 
         }
@@ -135,22 +137,54 @@ app.controller("searchController", function ($scope, searchService) {
 
 
     //判断当前页为第一页
-    $scope.isTopPage=function () {
-        if($scope.searchMap.pageNo==1){
+    $scope.isTopPage = function () {
+        if ($scope.searchMap.pageNo == 1) {
             return true;
-        }else{
+        } else {
             return false;
         }
     };
 
     //判断当前页是否未最后一页
     $scope.isEndPage = function () {
-        if($scope.searchMap.pageNo==$scope.resultMap.totalPages){
+        if ($scope.searchMap.pageNo == $scope.resultMap.totalPages) {
             return true;
-        }else{
+        } else {
             return false;
         }
     };
+
+
+    //设置排序规则
+    $scope.sortSearch = function (sortField, sort) {
+        $scope.searchMap.sortField=sortField;
+        $scope.searchMap.sort=sort;
+        $scope.search()
+    }
+
+
+
+    //判断关键字是不是品牌
+    $scope.keywordsIsBrand=function () {
+        //循环遍历品牌判断
+        for(var i = 0; i < $scope.resultMap.brandList.length; i++) {
+            //判断关键字是否包含品牌
+          if($scope.searchMap.keywords.indexOf($scope.resultMap.brandList[i].text)>=0){
+            return true;
+          }
+        }
+        return false;
+    };
+
+
+
+    //加载查询字符串
+    $scope.loadKeywords=function () {
+        $scope.searchMap.keywords = $location.search()['keywords'];
+        $scope.search();
+    }
+
+
 
 
 });

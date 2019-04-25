@@ -1,7 +1,12 @@
 package com.pinyougou.manager.controller;
+import java.util.Arrays;
 import java.util.List;
 
+import com.pinyougou.pojo.TbItem;
 import com.pinyougou.pojogroup.Goods;
+import com.pinyougou.search.service.ItemSearchService;
+import com.pinyougou.sellergoods.service.ItemService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -95,6 +100,9 @@ public class GoodsController {
 	public Result delete(Long [] ids){
 		try {
 			goodsService.delete(ids);
+
+			itemSearchService.deleteByGoodsIds(Arrays.asList(ids));
+
 			return new Result(true, "删除成功"); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -114,6 +122,8 @@ public class GoodsController {
 		return goodsService.findPage(goods, page, rows);		
 	}
 
+	@Reference(timeout = 8000)
+	private ItemSearchService itemSearchService;
 
 	/**
 	 * 更新状态
@@ -126,6 +136,18 @@ public class GoodsController {
 	public Result updateStatus(Long[] ids, String status){
 		try {
 			goodsService.updateStatus(ids, status);
+			//按照 SPU ID 查询 SKU 列表(状态为 1)
+			if("1".equals(status)){//审核通过
+				List<TbItem> list = goodsService.findItemListByGoodsIdAndStatus(ids, status);
+				//调用搜索接口实现数据批量导入
+				if(list.size()>0){
+					itemSearchService.importList(list);
+				}else{
+					System.out.println("没有明细数据");
+				}
+			}
+
+
 			return new Result(true, "成功");
 		} catch (Exception e) {
 			e.printStackTrace();
