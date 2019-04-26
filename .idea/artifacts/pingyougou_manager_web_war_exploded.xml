@@ -82,6 +82,9 @@
           <element id="archive" name="pingyougou_search_interface-1.0-SNAPSHOT.jar">
             <element id="module-output" name="pingyougou_search_interface" />
           </element>
+          <element id="archive" name="pingyougou_page_interface-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="pingyougou_page_interface" />
+          </element>
         </element>
       </element>
       <element id="directory" name="META-INF">

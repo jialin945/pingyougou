@@ -7,6 +7,9 @@
       <module fileurl="file://$PROJECT_DIR$/pingyougou_content_service/pingyougou_content_service.iml" filepath="$PROJECT_DIR$/pingyougou_content_service/pingyougou_content_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_dao/pingyougou_dao.iml" filepath="$PROJECT_DIR$/pingyougou_dao/pingyougou_dao.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_manager_web/pingyougou_manager_web.iml" filepath="$PROJECT_DIR$/pingyougou_manager_web/pingyougou_manager_web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_page_interface/pingyougou_page_interface.iml" filepath="$PROJECT_DIR$/pingyougou_page_interface/pingyougou_page_interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_page_service/pingyougou_page_service.iml" filepath="$PROJECT_DIR$/pingyougou_page_service/pingyougou_page_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_page_web/pingyougou_page_web.iml" filepath="$PROJECT_DIR$/pingyougou_page_web/pingyougou_page_web.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_parent.iml" filepath="$PROJECT_DIR$/pingyougou_parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_pojo/pingyougou_pojo.iml" filepath="$PROJECT_DIR$/pingyougou_pojo/pingyougou_pojo.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_portal_web/pingyougou_portal_web.iml" filepath="$PROJECT_DIR$/pingyougou_portal_web/pingyougou_portal_web.iml" />
