@@ -1,4 +1,4 @@
-app.controller("searchController", function ($scope,$location, searchService) {
+app.controller("searchController", function ($scope, $location, searchService) {
     //搜索
     $scope.search = function () {
         //修改 search 方法, 在执行查询前，转换为 int 类型，否则提交到后端有可能变成字符串
@@ -23,8 +23,8 @@ app.controller("searchController", function ($scope,$location, searchService) {
         'price': '',
         'pageNo': 1,
         'pageSize': 40,
-        'sortField':'',
-        'sort':''
+        'sortField': '',
+        'sort': ''
     };
 
     //添加搜索项
@@ -157,34 +157,33 @@ app.controller("searchController", function ($scope,$location, searchService) {
 
     //设置排序规则
     $scope.sortSearch = function (sortField, sort) {
-        $scope.searchMap.sortField=sortField;
-        $scope.searchMap.sort=sort;
+        $scope.searchMap.sortField = sortField;
+        $scope.searchMap.sort = sort;
         $scope.search()
     }
 
 
-
     //判断关键字是不是品牌
-    $scope.keywordsIsBrand=function () {
+    $scope.keywordsIsBrand = function () {
         //循环遍历品牌判断
-        for(var i = 0; i < $scope.resultMap.brandList.length; i++) {
+        for (var i = 0; i < $scope.resultMap.brandList.length; i++) {
             //判断关键字是否包含品牌
-          if($scope.searchMap.keywords.indexOf($scope.resultMap.brandList[i].text)>=0){
-            return true;
-          }
+            if ($scope.searchMap.keywords.indexOf($scope.resultMap.brandList[i].text) >= 0) {
+                return true;
+            }
         }
         return false;
     };
 
 
-
     //加载查询字符串
-    $scope.loadKeywords=function () {
+    $scope.loadKeywords = function () {
         $scope.searchMap.keywords = $location.search()['keywords'];
-        $scope.search();
+        if (!$scope.searchMap.keywords == null && !$scope.searchMap.keywords == "") {
+            $scope.search();
+        }
+
     }
-
-
 
 
 });
