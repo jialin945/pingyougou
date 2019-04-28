@@ -161,7 +161,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
             TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
             criteria.andSpecIdEqualTo(new Long((Integer) map.get("id")));
             List<TbSpecificationOption> options = specificationOptionMapper.selectByExample(example);
-            map.put("options", options);
+            map.put("options", options);//{"id":27,"text":"网络",options:[{id：xxx,optionName:移动2G}]}
         }
 
 

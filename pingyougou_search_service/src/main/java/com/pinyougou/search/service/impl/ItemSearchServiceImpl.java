@@ -28,8 +28,13 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     @Override
     public Map<String, Object> search(Map searchMap) {
         //关键字空格处理
-        String keywords = (String) searchMap.get("keywords");
-        searchMap.put("keywords", keywords.replace(" ", ""));
+        if (!"".equals(searchMap.get("keywords"))) {
+            String keywords = (String) searchMap.get("keywords");
+            searchMap.put("keywords", keywords.replace(" ", ""));
+        }else{
+            return null;
+        }
+
 
         Map map = new HashMap();
         //1.查询列表  按关键字查询（高亮显示）
@@ -46,7 +51,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             if (categoryList.size() > 0) {
                 map.putAll(searchBrandAndSpecList(categoryList.get(0)));
             }
-        }else{
+        } else {
             map.putAll(searchBrandAndSpecList(category));
         }
 
@@ -185,7 +190,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
 
         //1.5 按价格筛选
-        if(!"".equals(searchMap.get("price"))){
+        if (!"".equals(searchMap.get("price"))) {
             String[] prices = ((String) searchMap.get("price")).split("-");
             //如果区间起点不等于 0
             if (!prices[0].equals(0)) {
@@ -207,13 +212,13 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
         //1.6 分页查询
         Integer pageNo = (Integer) searchMap.get("pageNo");//提取页码
-        if(pageNo==null){
-            pageNo=1;
+        if (pageNo == null) {
+            pageNo = 1;
         }
 
         Integer pageSize = (Integer) searchMap.get("pageSize");//每页记录数
-        if(pageSize==null){
-            pageSize=20;
+        if (pageSize == null) {
+            pageSize = 20;
         }
 
         query.setOffset((pageNo - 1) * pageSize);//从第几条记录查询
@@ -223,28 +228,17 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         String sortValue = (String) searchMap.get("sort");//ASC升序 DESC降序
         String sortField = (String) searchMap.get("sortField");//排序字段
 
-        if(sortValue!=null && !"".equals(sortValue)){
-            if("ASC".equals(sortValue)){
+        if (sortValue != null && !"".equals(sortValue)) {
+            if ("ASC".equals(sortValue)) {
                 Sort sort = new Sort(Sort.Direction.ASC, "item_" + sortField);
                 query.addSort(sort);
             }
 
-            if("DESC".equals(sortValue)){
+            if ("DESC".equals(sortValue)) {
                 Sort sort = new Sort(Sort.Direction.DESC, "item_" + sortField);
                 query.addSort(sort);
             }
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
         //---------------获取高亮结果集------------------
@@ -364,22 +358,206 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     }
 
 
+    public Map search4(Map searchMap) {
+        Map map = new HashMap();
+        //1.关键字空格处理
+        String keywords = (String) searchMap.get("keywords");
+        searchMap.put("keywords", keywords.replace(" ", ""));
+
+        //2.关键字查询 查询列表 (高亮显示)
+        Map map1 = searchList2(searchMap);
+        map.putAll(map1);
+
+        // 3根据关键字查询商品分类 分组查询
+        List<String> categoryList = searchCategoryList2(searchMap);
+        map.put("categoryList", categoryList);
+
+        //4.查询品牌和规格列表
+        String category = (String) searchMap.get("category");
+        if ("".equals(category)) {
+            if (categoryList.size() > 0) {
+                map.putAll(searchBrandAndSpecList(categoryList.get(0)));
+            }
+        } else {
+            map.putAll(searchBrandAndSpecList(category));
+        }
+
+
+        return map;
+    }
+
+    //4.查询品牌和规格列表
+    private Map searchBrandAndSpecList2(String category) {
+        Map map = new HashMap();
+        //获取模板id
+        Long templateId = (Long) redisTemplate.boundHashOps("itemCat").get(category);
+
+        //根据模板 ID 查询品牌列表
+        if (templateId != null) {
+            List brandList = (List) redisTemplate.boundHashOps("brandList").get(templateId);
+            map.put("brandList", brandList);
+        }
+
+        if (templateId != null) {
+            List specList = (List) redisTemplate.boundHashOps("specList").get(templateId);
+            map.put("specList", specList);
+        }
+
+
+        return map;
+    }
+
+    // 3根据关键字查询商品分类 分组查询
+    private List<String> searchCategoryList2(Map searchMap) {
+        List<String> list = new ArrayList<>();
+        Query query = new SimpleQuery();
+        //按照关键字查询
+        Criteria criteria = new Criteria("item_keywords").is("keywords");
+        query.addCriteria(criteria);
+        //设置分组字段
+        GroupOptions groupOptions = new GroupOptions().addGroupByField("item_category");
+        query.setGroupOptions(groupOptions);
+        //得到分组页
+        GroupPage<TbItem> page = solrTemplate.queryForGroupPage(query, TbItem.class);
+
+        //得到分组入口页
+        GroupResult<TbItem> groupResult = page.getGroupResult("item_category");
+        //得到分组集合
+        org.springframework.data.domain.Page<GroupEntry<TbItem>> groupEntries = groupResult.getGroupEntries();
+        for (GroupEntry<TbItem> groupEntry : groupEntries) {
+            String groupValue = groupEntry.getGroupValue();
+            //将分组结果的名称封装到返回值中
+            list.add(groupValue);
+        }
+
+        return list;
+    }
+
+    //2.关键字查询 查询列表 (高亮显示)
+    private Map searchList2(Map searchMap) {
+        Map map = new HashMap();
+
+
+        HighlightQuery query = new SimpleHighlightQuery();
+        //设置高亮选项初始化
+        HighlightOptions highlightOptions = new HighlightOptions().addField("item_title");
+        highlightOptions.setSimplePrefix("<em style='color:red'>");
+        highlightOptions.setSimplePostfix("</em>");
+        query.setHighlightOptions(highlightOptions);
+
+        //1.1 关键字查询
+        Criteria criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
+        query.addCriteria(criteria);
+        solrTemplate.queryForHighlightPage(query, TbItem.class);
+
+        //1.2按商品分类过滤
+        if (!"".equals(searchMap.get("category"))) {
+            FilterQuery filterQuery = new SimpleFilterQuery();
+            Criteria filterCriteria = new Criteria("item_category").is(searchMap.get("category"));
+            filterQuery.addCriteria(filterCriteria);
+            query.addFilterQuery(filterQuery);
+        }
+
+        //1.3按品牌过滤
+        if (!"".equals(searchMap.get("brand"))) {
+            FilterQuery filterQuery = new SimpleFilterQuery();
+            Criteria filterCriteria = new Criteria("item_brand").is(searchMap.get("brand"));
+            filterQuery.addCriteria(filterCriteria);
+            query.addFilterQuery(filterQuery);
+        }
+
+        //1.4按规格过滤
+        if (searchMap.get("spec") != null) {
+            Map<String, String> specMap = (Map<String, String>) searchMap.get("spec");
+            for (String key : specMap.keySet()) {
+                FilterQuery filterQuery = new SimpleFilterQuery();
+                Criteria filterCriteria = new Criteria("item_spec_" + key).is(searchMap.get(key));
+                filterQuery.addCriteria(filterCriteria);
+                query.addFilterQuery(filterQuery);
+            }
+        }
+
+        //1.5按价格过滤
+        if (!"".equals(searchMap.get("price"))) {
+            String[] prices = ((String) searchMap.get("price")).split("-");
+            if (!prices[0].equals("0")) {//如果最低价格不等于0
+                FilterQuery filterQuery = new SimpleFilterQuery();
+                Criteria filterCriteria = new Criteria("item_price").greaterThanEqual(prices[0]);
+                filterQuery.addCriteria(filterCriteria);
+                query.addFilterQuery(filterQuery);
+            }
+
+            if (!prices[1].equals("*")) {//如果最高价格不等于*
+                FilterQuery filterQuery = new SimpleFilterQuery();
+                Criteria filterCriteria = new Criteria("item_price").lessThanEqual(prices[1]);
+                filterQuery.addCriteria(filterCriteria);
+                query.addFilterQuery(filterQuery);
+            }
+
+        }
+
+        //1.6 分页
+        Integer pageNo = (Integer) searchMap.get("pageNo");//获取当前页
+        Integer pageSize = (Integer) searchMap.get("pageSize");//每页记录数
+        query.setOffset((pageNo - 1) * pageSize);//起始索引
+        query.setRows(pageSize);
+
+        //1.7 排序
+        String sortValue = (String) searchMap.get("sort");//升序ASC 降序DESC
+        String sortField = (String) searchMap.get("sortField");//排序字段
+        if (sortValue != null && sortField != null) {
+            if ("ASC".equals(sortValue)) {
+                Sort sort = new Sort(Sort.Direction.ASC, "item_" + sortField);
+                query.addSort(sort);
+            }
+
+            if ("DESC".equals(sortValue)) {
+                Sort sort = new Sort(Sort.Direction.DESC, "item_" + sortField);
+                query.addSort(sort);
+            }
+
+        }
+
+
+        //***********  获取高亮结果集  ***********
+        //高亮页对象
+        HighlightPage<TbItem> page = solrTemplate.queryForHighlightPage(query, TbItem.class);
+        //高亮入口集合
+        List<HighlightEntry<TbItem>> highlighted = page.getHighlighted();
+        for (HighlightEntry<TbItem> highlightEntry : highlighted) {
+            //获取高亮列表
+            List<HighlightEntry.Highlight> highlights = highlightEntry.getHighlights();
+            if (highlights.size() > 0 && highlights.get(0).getSnipplets().size() > 0) {
+                //获取实体
+                TbItem entity = highlightEntry.getEntity();
+                entity.setTitle(highlights.get(0).getSnipplets().get(0));
+            }
+        }
+        map.put("rows", page.getContent());
+        map.put("totalPages", page.getTotalPages());//总页数
+        map.put("total", page.getTotalElements());//总记录数
+
+        return map;
+    }
+
+
     /**
      * 导入数据
      */
     @Override
-    public void importList(List list){
+    public void importList(List list) {
         solrTemplate.saveBeans(list);
         solrTemplate.commit();
     }
 
     /**
      * 删除数据
+     *
      * @param goodsIdList (spu)
      */
     @Override
     public void deleteByGoodsIds(List goodsIdList) {
-        System.out.println("删除商品 ID"+goodsIdList);
+        System.out.println("删除商品 ID" + goodsIdList);
         Query query = new SimpleQuery("*:*");
         Criteria criteria = new Criteria("item_goodsid").in(goodsIdList);
         query.addCriteria(criteria);
