@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
-import com.pinyougou.page.service.ItemPageService;
+//import com.pinyougou.page.service.ItemPageService;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.pojogroup.Goods;
 //import com.pinyougou.search.service.ItemSearchService;
@@ -114,7 +114,17 @@ public class GoodsController {
 			//itemSearchService.deleteByGoodsIds(Arrays.asList(ids));
 
 
+
+
 			jmsTemplate.send(queueSolrDeleteDestination, new MessageCreator() {
+				@Override
+				public Message createMessage(Session session) throws JMSException {
+					return session.createObjectMessage(ids);
+				}
+			});
+
+			//删除页面
+			jmsTemplate.send(topicPageDeleteDestination, new MessageCreator() {
 				@Override
 				public Message createMessage(Session session) throws JMSException {
 					return session.createObjectMessage(ids);
@@ -147,7 +157,13 @@ public class GoodsController {
 	private Destination queueSolrDestination;//用于发送 solr 导入的消息
 
 	@Autowired
-	private Destination queueSolrDeleteDestination;//用户在索引库中删除记录
+	private Destination queueSolrDeleteDestination;//用户在索引库中删除记录(点对点)
+
+	@Autowired
+	private Destination topicPageDestination;//用于生成商品详情页消息目标(发布订阅)
+
+	@Autowired
+	private Destination topicPageDeleteDestination;
 
 	@Autowired
 	private JmsTemplate jmsTemplate;
@@ -182,11 +198,22 @@ public class GoodsController {
 					System.out.println("没有明细数据");
 				}
 
+				//生成商品详细页
+				for (final Long goodsId : ids) {
+					jmsTemplate.send(topicPageDestination, new MessageCreator() {
+						@Override
+						public Message createMessage(Session session) throws JMSException {
+							return session.createTextMessage(goodsId+"");
+						}
+					});
+				}
+
+
 				//静态页生成
-				for (Long goodsId : ids) {
+				/*for (Long goodsId : ids) {
 					//genHtml(goodsId);
 					itemPageService.genItemHtml(goodsId);
-				}
+				}*/
 			}
 
 
@@ -199,16 +226,16 @@ public class GoodsController {
 	}
 
 
-	@Reference(timeout = 8000)
-	private ItemPageService itemPageService;
+	//@Reference(timeout = 8000)
+	//private ItemPageService itemPageService;
 
 	/**
 	 * 生成静态页 (测试)
 	 */
-	@RequestMapping("/genHtml")
+	/*@RequestMapping("/genHtml")
 	public void genHtml(Long goodsId){
 		itemPageService.genItemHtml(goodsId);
-	}
+	}*/
 
 	
 }
