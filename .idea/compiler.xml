@@ -23,6 +23,9 @@
         <module name="pingyougou_sellergoods_service" />
         <module name="pingyougou_shop_web" />
         <module name="pingyougou_solr_util" />
+        <module name="pingyougou_user_interface" />
+        <module name="pingyougou_user_service" />
+        <module name="pingyougou_user_web" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -44,6 +47,9 @@
       <module name="pingyougou_sellergoods_service" target="1.7" />
       <module name="pingyougou_shop_web" target="1.7" />
       <module name="pingyougou_solr_util" target="1.7" />
+      <module name="pingyougou_user_interface" target="1.7" />
+      <module name="pingyougou_user_service" target="1.7" />
+      <module name="pingyougou_user_web" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -25,6 +25,9 @@
         <module>pingyougou_page_interface</module>
         <module>pingyougou_page_service</module>
         <module>pingyougou_page_web</module>
+        <module>pingyougou_user_interface</module>
+        <module>pingyougou_user_service</module>
+        <module>pingyougou_user_web</module>
 
     </modules>
     <packaging>pom</packaging>

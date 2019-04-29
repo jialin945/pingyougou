@@ -10,5 +10,7 @@
     <file url="file://$PROJECT_DIR$/pingyougou_search_web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/pingyougou_sellergoods_service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/pingyougou_shop_web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/pingyougou_user_service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/pingyougou_user_web" charset="UTF-8" />
   </component>
 </project>
