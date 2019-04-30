@@ -6,6 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="pingyougou_car_interface" />
+        <module name="pingyougou_car_service" />
+        <module name="pingyougou_car_web" />
+        <module name="pingyougou_cart_interface" />
+        <module name="pingyougou_cart_service" />
+        <module name="pingyougou_cart_web" />
         <module name="pingyougou_common" />
         <module name="pingyougou_content_interface" />
         <module name="pingyougou_content_service" />
@@ -29,6 +35,12 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="pingyougou_car_interface" target="1.7" />
+      <module name="pingyougou_car_service" target="1.7" />
+      <module name="pingyougou_car_web" target="1.7" />
+      <module name="pingyougou_cart_interface" target="1.7" />
+      <module name="pingyougou_cart_service" target="1.7" />
+      <module name="pingyougou_cart_web" target="1.7" />
       <module name="pingyougou_common" target="1.7" />
       <module name="pingyougou_content_interface" target="1.7" />
       <module name="pingyougou_content_service" target="1.7" />

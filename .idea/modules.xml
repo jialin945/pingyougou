@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_cart_interface/pingyougou_cart_interface.iml" filepath="$PROJECT_DIR$/pingyougou_cart_interface/pingyougou_cart_interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_cart_service/pingyougou_cart_service.iml" filepath="$PROJECT_DIR$/pingyougou_cart_service/pingyougou_cart_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_cart_web/pingyougou_cart_web.iml" filepath="$PROJECT_DIR$/pingyougou_cart_web/pingyougou_cart_web.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_common/pingyougou_common.iml" filepath="$PROJECT_DIR$/pingyougou_common/pingyougou_common.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_content_interface/pingyougou_content_interface.iml" filepath="$PROJECT_DIR$/pingyougou_content_interface/pingyougou_content_interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_content_service/pingyougou_content_service.iml" filepath="$PROJECT_DIR$/pingyougou_content_service/pingyougou_content_service.iml" />

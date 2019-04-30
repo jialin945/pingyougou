@@ -28,6 +28,10 @@
         <module>pingyougou_user_interface</module>
         <module>pingyougou_user_service</module>
         <module>pingyougou_user_web</module>
+        <module>pingyougou_cart_interface</module>
+        <module>pingyougou_cart_service</module>
+        <module>pingyougou_cart_web</module>
+
 
     </modules>
     <packaging>pom</packaging>
