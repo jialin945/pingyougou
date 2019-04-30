@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
 import javax.security.auth.login.Configuration;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,9 +82,10 @@ public class ItemPageServiceImpl implements ItemPageService {
             List<TbItem> itemList = itemMapper.selectByExample(example);
             dataModel.put("itemList", itemList);
 
-
-
-            Writer out = new FileWriter(pagedir + goodsId + ".html");
+            String dir=pagedir + goodsId + ".html";
+            //解决中文乱码问题
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(dir), "utf-8");
+            //Writer out = new FileWriter(pagedir + goodsId + ".html");
             template.process(dataModel, out);
 
             return  true;
