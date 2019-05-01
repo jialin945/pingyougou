@@ -7,6 +7,7 @@ import com.pinyougou.cart.service.CartService;
 import com.pinyougou.pojogroup.Cart;
 import entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,26 +37,51 @@ public class CartController {
      */
     @RequestMapping("/findCartList")
     public List<Cart> findCartList(){
+        //合并购物车  进入购物车每次都需要走给方法 索引在这里合并购物车
+        // 登陆后 将cookie的值合并到redis中 并且清空 cookie里面的值
 
         //得到登陆人账号,判断当前是否有人登陆
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println("当前登陆人:"+username);
-        if(username.equals("anonymousUser")){//匿名用户
 
+        //读取本地购物车 cookie里面获取
+        String cartListString = CookieUtil.getCookieValue(request, "cartList", "UTF-8");
+        if (cartListString == null || cartListString.equals("")) {
+            cartListString = "[]";//赋值一个空集合 以免报错
+        }
+
+        List<Cart> cartList_cookie = JSON.parseArray(cartListString, Cart.class);
+
+        if(username.equals("anonymousUser")){//匿名用户 没有登陆
+            return  cartList_cookie;
         }else{//已登录
 
+            //从redis中获取
+            List<Cart> cartList_redis = cartService.findCartListFromRedis(username);
+
+            if(cartList_cookie.size()>0){//如果本地存在购物车
+                cartList_redis=cartService.mergeCartList(cartList_redis, cartList_cookie);
+                //清除本地cookie
+                CookieUtil.deleteCookie(request, response, "cartList");
+                //将合并后的数据存入redis
+                cartService.saveCartListToRedis(username, cartList_redis);
+                System.out.println("执行了合并购物车逻辑");
+            }
+
+            return cartList_redis;
         }
 
 
+
         //从cookie中获取
-        String cartListStr = CookieUtil.getCookieValue(request, "cartList", "UTF-8");
+        /*String cartListStr = CookieUtil.getCookieValue(request, "cartList", "UTF-8");
         if(cartListStr==null || cartListStr.equals("")){
             cartListStr = "[]";//赋值一个空集合 以免报错
         }
 
-        List<Cart> cartList_cookie = JSON.parseArray(cartListStr, Cart.class);
+        List<Cart> cartList_cookie = JSON.parseArray(cartListStr, Cart.class);*/
 
-        return  cartList_cookie;
+
     }
 
 
@@ -67,16 +93,31 @@ public class CartController {
      */
     @RequestMapping("/addGoodsToCartList")
     public Result addGoodsToCartList(Long itemId,Integer num){
-        /*//得到登陆人账号,判断当前是否有人登陆
+        //得到登陆人账号,判断当前是否有人登陆
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println("当前登陆人:"+username);
-        if(username.equals("anonymousUser")){//匿名用户
-
-        }else{//已登录
-
-        }*/
+        System.out.println("当前登陆用户:"+username);
 
         try {
+            List<Cart> cartList = findCartList();//获取购物车列表
+            cartList = cartService.addGoodsToCartList(cartList, itemId, num);
+
+            if(username.equals("anonymousUser")){//匿名用户 如果是未登录，保存到 cookie
+                CookieUtil.setCookie(request, response, "cartList", JSON.toJSONString(cartList), 3600 * 24, "UTF-8");
+                System.out.println("向 cookie 存入数据");
+
+            }else{//已登录  保存到 redis
+                cartService.saveCartListToRedis(username, cartList);
+            }
+
+            return new Result(true, "添加成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, "添加失败");
+        }
+
+
+
+        /*try {
             List<Cart> cartList = findCartList();//获取购物车列表
             //重新赋值
             cartList=cartService.addGoodsToCartList(cartList, itemId, num);
@@ -87,7 +128,7 @@ public class CartController {
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(true, "添加失败");
-        }
+        }*/
     }
 
 
