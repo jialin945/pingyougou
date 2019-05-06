@@ -5,6 +5,7 @@
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_cart_web" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_content_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_manager_web" />
+    <file type="web" url="file://$PROJECT_DIR$/pingyougou_order_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_page_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_page_web" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_portal_web" />
@@ -19,6 +20,8 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/itcast_sms_service/pom.xml" />
+        <option value="$PROJECT_DIR$/../itcast_sms_service/pom.xml" />
       </list>
     </option>
   </component>

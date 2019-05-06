@@ -193,8 +193,8 @@ public class UserServiceImpl implements UserService {
 				mapMessage.setString("mobile", phone);
 				mapMessage.setString("template_code", template_code);
 				mapMessage.setString("sign_name", sign_name);
-				Map map = new HashMap();
-				map.put("number",code);
+				Map map = new HashMap<>();
+				map.put("code",code);
 				mapMessage.setString("param", JSON.toJSONString(map));
 
 

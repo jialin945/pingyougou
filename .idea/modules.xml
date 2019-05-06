@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../itcast_sms_service/itcast_sms_service.iml" filepath="$PROJECT_DIR$/../itcast_sms_service/itcast_sms_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_cart_interface/pingyougou_cart_interface.iml" filepath="$PROJECT_DIR$/pingyougou_cart_interface/pingyougou_cart_interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_cart_service/pingyougou_cart_service.iml" filepath="$PROJECT_DIR$/pingyougou_cart_service/pingyougou_cart_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_cart_web/pingyougou_cart_web.iml" filepath="$PROJECT_DIR$/pingyougou_cart_web/pingyougou_cart_web.iml" />
@@ -10,6 +11,8 @@
       <module fileurl="file://$PROJECT_DIR$/pingyougou_content_service/pingyougou_content_service.iml" filepath="$PROJECT_DIR$/pingyougou_content_service/pingyougou_content_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_dao/pingyougou_dao.iml" filepath="$PROJECT_DIR$/pingyougou_dao/pingyougou_dao.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_manager_web/pingyougou_manager_web.iml" filepath="$PROJECT_DIR$/pingyougou_manager_web/pingyougou_manager_web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_order_interface/pingyougou_order_interface.iml" filepath="$PROJECT_DIR$/pingyougou_order_interface/pingyougou_order_interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_order_service/pingyougou_order_service.iml" filepath="$PROJECT_DIR$/pingyougou_order_service/pingyougou_order_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_page_interface/pingyougou_page_interface.iml" filepath="$PROJECT_DIR$/pingyougou_page_interface/pingyougou_page_interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_page_service/pingyougou_page_service.iml" filepath="$PROJECT_DIR$/pingyougou_page_service/pingyougou_page_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_page_web/pingyougou_page_web.iml" filepath="$PROJECT_DIR$/pingyougou_page_web/pingyougou_page_web.iml" />

@@ -95,6 +95,9 @@
           <element id="archive" name="pingyougou_user_interface-1.0-SNAPSHOT.jar">
             <element id="module-output" name="pingyougou_user_interface" />
           </element>
+          <element id="archive" name="pingyougou_order_interface-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="pingyougou_order_interface" />
+          </element>
         </element>
       </element>
       <element id="directory" name="META-INF">
