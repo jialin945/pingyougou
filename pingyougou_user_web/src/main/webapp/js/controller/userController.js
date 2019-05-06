@@ -5,6 +5,8 @@ app.controller('userController' ,function($scope,$controller   ,userService){
 	$scope.reg=function () {
 		if($scope.entity.password!=$scope.password){
 			alert("两次输入的密码不一致，请重新输入");
+            $scope.entity.password = "";
+            $scope.password = "";
 			return;
 		}
 

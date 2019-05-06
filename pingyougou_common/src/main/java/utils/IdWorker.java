@@ -160,4 +160,13 @@ public class IdWorker {
     }
 
 
+    public static void main(String[] args) {
+        IdWorker idWorker = new IdWorker(0, 0);
+        for (int i = 0; i < 100; i++) {
+            long nextId = idWorker.nextId();
+            System.out.println("nextId = " + nextId);
+        }
+    }
+
+
 }

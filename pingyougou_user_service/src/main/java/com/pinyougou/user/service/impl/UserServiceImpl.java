@@ -3,11 +3,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 import com.alibaba.fastjson.JSON;
 import com.pinyougou.user.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
@@ -179,11 +181,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void createSmsCode(final String phone) {
 		//生成 6 位随机数
-		final String code= (long) (Math.random() * 1000000) + "";
+		//final String code= (long) (Math.random() * 1000000) + "";
+		final String code = RandomStringUtils.randomNumeric(6);//生成6位随机数
 		System.out.println("验证码："+code);
 
 		//存入缓存
-		redisTemplate.boundHashOps("smsCode").put(phone, code);
+		//redisTemplate.boundHashOps("smsCode").put(phone, code);
+		redisTemplate.opsForValue().set(phone,code,60, TimeUnit.SECONDS);
 
 		//发送到 activeMQ ....
 		jmsTemplate.send(smsDestination, new MessageCreator() {
@@ -193,7 +197,7 @@ public class UserServiceImpl implements UserService {
 				mapMessage.setString("mobile", phone);
 				mapMessage.setString("template_code", template_code);
 				mapMessage.setString("sign_name", sign_name);
-				Map map = new HashMap<>();
+				Map map = new HashMap();
 				map.put("code",code);
 				mapMessage.setString("param", JSON.toJSONString(map));
 
@@ -213,7 +217,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Boolean checkSmsCode(String phone, String code) {
 		//得到缓存中存储的验证码
-		String sysCode = (String) redisTemplate.boundHashOps("smsCode").get(phone);
+		//String sysCode = (String) redisTemplate.boundHashOps("smsCode").get(phone);
+		String sysCode= (String) redisTemplate.boundValueOps(phone).get();
 		if(sysCode==null){
 			return  false;
 		}
@@ -221,6 +226,8 @@ public class UserServiceImpl implements UserService {
 		if(!sysCode.equals(code)){
 			return false;
 		}
+		//清除缓存
+		redisTemplate.delete(phone);
 
 		return true;
 	}
