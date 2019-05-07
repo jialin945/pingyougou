@@ -17,6 +17,8 @@
       <module fileurl="file://$PROJECT_DIR$/pingyougou_page_service/pingyougou_page_service.iml" filepath="$PROJECT_DIR$/pingyougou_page_service/pingyougou_page_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_page_web/pingyougou_page_web.iml" filepath="$PROJECT_DIR$/pingyougou_page_web/pingyougou_page_web.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_parent.iml" filepath="$PROJECT_DIR$/pingyougou_parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_pay_interface/pingyougou_pay_interface.iml" filepath="$PROJECT_DIR$/pingyougou_pay_interface/pingyougou_pay_interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_pay_service/pingyougou_pay_service.iml" filepath="$PROJECT_DIR$/pingyougou_pay_service/pingyougou_pay_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_pojo/pingyougou_pojo.iml" filepath="$PROJECT_DIR$/pingyougou_pojo/pingyougou_pojo.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_portal_web/pingyougou_portal_web.iml" filepath="$PROJECT_DIR$/pingyougou_portal_web/pingyougou_portal_web.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_search_interface/pingyougou_search_interface.iml" filepath="$PROJECT_DIR$/pingyougou_search_interface/pingyougou_search_interface.iml" />

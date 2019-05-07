@@ -33,6 +33,8 @@
         <module>pingyougou_cart_web</module>
         <module>pingyougou_order_interface</module>
         <module>pingyougou_order_service</module>
+        <module>pingyougou_pay_interface</module>
+        <module>pingyougou_pay_service</module>
 
 
     </modules>
