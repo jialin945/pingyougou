@@ -37,7 +37,17 @@ app.service("cartService",function ($http) {
     this.submitOrder=function (order) {
         return $http.post("order/add.do", order);
     }
-    
+
+
+    //增加
+    this.add=function(entity){
+        return  $http.post('address/add.do',entity );
+    }
+
+    //修改
+    this.update=function(entity){
+        return  $http.post('address/update.do',entity );
+    }
     
 
 });

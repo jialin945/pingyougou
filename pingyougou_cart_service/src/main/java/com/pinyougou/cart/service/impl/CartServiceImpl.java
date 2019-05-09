@@ -34,6 +34,21 @@ public class CartServiceImpl implements CartService {
      */
     @Override
     public List<Cart> addGoodsToCartList(List<Cart> cartList, Long itemId, Integer num) {
+
+        //1.根据商品 SKU ID 查询 SKU 商品信息
+        //2.获取商家 ID
+        //3.根据商家 ID 判断购物车列表中是否存在该商家的购物车
+
+        //4.如果购物车列表中不存在该商家的购物车
+        //4.1 新建购物车对象
+        //4.2 将新建的购物车对象添加到购物车列表
+
+        //5.如果购物车列表中存在该商家的购物车
+        // 查询购物车明细列表中是否存在该商品
+        //5.1. 如果没有，新增购物车明细
+        //5.2. 如果有，在原购物车明细上添加数量，更改金额
+
+
         //1.根据商品的sku id查询sku商品信息
         TbItem item = itemMapper.selectByPrimaryKey(itemId);
         if (item == null) {
@@ -68,16 +83,16 @@ public class CartServiceImpl implements CartService {
                 //5.1 如果没有,新增购物车明细
                 orderItem = createOderItem(item, num);
                 cart.getOrderItemList().add(orderItem);
-            }else{
+            } else {
                 //5.2 如果有,在原有购物车明细上添加数量,更改金额
                 orderItem.setNum(orderItem.getNum() + num);//更改数量后 再 计算金额
-                orderItem.setPrice(new BigDecimal(orderItem.getPrice().doubleValue()*orderItem.getNum()));
+                orderItem.setTotalFee(new BigDecimal(orderItem.getPrice().doubleValue() * orderItem.getNum()));//金额
                 //如果数量操作后小于等于 0，则移除
-                if(orderItem.getNum()<=0){
+                if (orderItem.getNum() <= 0) {
                     cart.getOrderItemList().remove(orderItem);//移除购物车明细
                 }
                 //如果移除后 cart 的明细数量为 0，则将 cart 移除
-                if(cart.getOrderItemList().size()==0){
+                if (cart.getOrderItemList().size() == 0) {
                     cartList.remove(cart);
                 }
             }
@@ -92,7 +107,6 @@ public class CartServiceImpl implements CartService {
     private RedisTemplate redisTemplate;
 
     /**
-     *
      * @param username
      * @return
      */
@@ -100,7 +114,7 @@ public class CartServiceImpl implements CartService {
     public List<Cart> findCartListFromRedis(String username) {
 
         List<Cart> cartList = (List<Cart>) redisTemplate.boundHashOps("cartList").get(username);
-        if(cartList==null){
+        if (cartList == null) {
             cartList = new ArrayList<>();
         }
 
@@ -109,7 +123,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void saveCartListToRedis(String username, List<Cart> cartList) {
-        System.out.println("向 redis 存入购物车数据....."+username);
+        System.out.println("向 redis 存入购物车数据....." + username);
 
         redisTemplate.boundHashOps("cartList").put(username, cartList);
 
@@ -161,14 +175,14 @@ public class CartServiceImpl implements CartService {
         }
 
         TbOrderItem orderItem = new TbOrderItem();
-        orderItem.setGoodsId(item.getGoodsId());
-        orderItem.setItemId(item.getId());
-        orderItem.setNum(num);
-        orderItem.setPicPath(item.getImage());
-        orderItem.setSellerId(item.getSellerId());
-        orderItem.setTitle(item.getTitle());
-        orderItem.setPrice(item.getPrice());
-        orderItem.setTotalFee(new BigDecimal(item.getPrice().doubleValue() * num));
+        orderItem.setGoodsId(item.getGoodsId());//spu id
+        orderItem.setItemId(item.getId());//商品id
+        orderItem.setNum(num);//购买数量
+        orderItem.setPicPath(item.getImage());//商品图片地址
+        orderItem.setSellerId(item.getSellerId());//商家id
+        orderItem.setTitle(item.getTitle());//标题
+        orderItem.setPrice(item.getPrice());//价钱
+        orderItem.setTotalFee(new BigDecimal(item.getPrice().doubleValue() * num));//总金额
         return orderItem;
     }
 
@@ -187,6 +201,68 @@ public class CartServiceImpl implements CartService {
         }
 
         return null;
+    }
+
+
+    public List<Cart> addGoodsToCartList2(List<Cart> cartList, Long itemId, Integer num) {
+
+        //1.根据商品 SKU ID 查询 SKU 商品信息
+        TbItem item = itemMapper.selectByPrimaryKey(itemId);
+        //2.获取商家 ID
+        String sellerId = item.getSellerId();
+        if (sellerId == null) {
+            throw new RuntimeException("商品不存在");
+        }
+        if (!item.getStatus().equals("1")) {
+            throw new RuntimeException("商品状态无效");
+        }
+        //3.根据商家 ID 判断购物车列表中是否存在该商家的购物车
+        Cart cart = searchCartBySellerId(cartList, sellerId);
+        //4.如果购物车列表中不存在该商家的购物车
+        if (cart == null) {
+            //4.1 新建购物车对象
+            cart = new Cart();
+            cart.setSellerId(sellerId);//商家id
+            cart.setSellerName(item.getSeller());//商家姓名
+            TbOrderItem oderItem = createOderItem(item, num);
+            List orderItemList = new ArrayList();
+            orderItemList.add(oderItem);
+            cart.setOrderItemList(orderItemList);
+            //4.2 将新建的购物车对象添加到购物车列表
+            cartList.add(cart);
+
+        } else {
+
+            //5.如果购物车列表中存在该商家的购物车
+            // 查询购物车明细列表中是否存在该商品
+            TbOrderItem orderItem = searchOderItemByItemId(cart.getOrderItemList(), itemId);
+            if(orderItem==null){
+                //5.1. 如果没有，新增购物车明细
+                TbOrderItem oderItem = createOderItem(item, num);
+                cart.getOrderItemList().add(oderItem);
+
+            }else{
+                //5.2. 如果有，在原购物车明细上添加数量，更改金额
+                orderItem.setNum(orderItem.getNum() + num);
+                orderItem.setTotalFee(new BigDecimal(orderItem.getPrice().doubleValue() * orderItem.getNum()));
+
+                //如果数量操作后小于等于 0，则移除
+                if(num<=0){
+                    cart.getOrderItemList().remove(orderItem);//移除购物车
+                }
+                //如果移除后 cart 的明细数量为 0，则将 cart 移除
+                if(cart.getOrderItemList().size()==0){
+                    cartList.remove(cart);
+                }
+            }
+
+
+
+
+        }
+
+
+        return cartList;
     }
 
 

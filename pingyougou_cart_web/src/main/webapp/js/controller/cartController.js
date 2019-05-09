@@ -61,7 +61,7 @@ app.controller("cartController", function ($scope, cartService) {
 
     $scope.selectPayType = function (type) {
         $scope.order.paymentType = type;
-    }
+    };
 
 
     //保存订单
@@ -74,18 +74,52 @@ app.controller("cartController", function ($scope, cartService) {
             function (response) {
                 if (response.success) {
                     //页面跳转
-                    if($scope.order.paymentType=="1"){//如果是微信支付，跳转到支付页面
+                    if ($scope.order.paymentType == "1") {//如果是微信支付，跳转到支付页面
                         location.href = "pay.html";
-                    }else{//如果货到付款，跳转到提示页面
+                    } else {//如果货到付款，跳转到提示页面
                         location.href = "paysuccess.html";
                     }
-                }else{
+                } else {
                     alert(response.message);//也可以跳转到提示页面
                 }
 
             }
         );
+    };
+
+
+
+
+    $scope.save=function () {
+        cartService.add( $scope.entity  ).success(
+            function(response){
+                if(response.success){
+                    alert("新增成功");
+                    findAddressList();
+                    //重新查询
+                    //$scope.reloadList();//重新加载
+                }else{
+                    alert(response.message);
+                }
+            }
+        );
+
+        /*addressService.add( $scope.entity  ).success(
+            function(response){
+                if(response.success){
+                    alert("新增成功");
+                    findAddressList();
+                    //重新查询
+                    //$scope.reloadList();//重新加载
+                }else{
+                    alert(response.message);
+                }
+            }
+        );*/
+
     }
+
+
 
 
     //求合计

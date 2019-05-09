@@ -30,6 +30,9 @@
         <module name="pingyougou_search_interface" />
         <module name="pingyougou_search_service" />
         <module name="pingyougou_search_web" />
+        <module name="pingyougou_seckill_interface" />
+        <module name="pingyougou_seckill_service" />
+        <module name="pingyougou_seckill_web" />
         <module name="pingyougou_sellergoods_interface" />
         <module name="pingyougou_sellergoods_service" />
         <module name="pingyougou_shop_web" />
@@ -65,6 +68,9 @@
       <module name="pingyougou_search_interface" target="1.7" />
       <module name="pingyougou_search_service" target="1.7" />
       <module name="pingyougou_search_web" target="1.7" />
+      <module name="pingyougou_seckill_interface" target="1.7" />
+      <module name="pingyougou_seckill_service" target="1.7" />
+      <module name="pingyougou_seckill_web" target="1.7" />
       <module name="pingyougou_sellergoods_interface" target="1.7" />
       <module name="pingyougou_sellergoods_service" target="1.7" />
       <module name="pingyougou_shop_web" target="1.7" />

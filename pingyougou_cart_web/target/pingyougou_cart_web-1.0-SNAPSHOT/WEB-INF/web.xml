@@ -58,7 +58,7 @@
 
   <!--欢迎页-->
   <welcome-file-list>
-    <welcome-file>car.html</welcome-file>
+    <welcome-file>cart.html</welcome-file>
   </welcome-file-list>
 
 

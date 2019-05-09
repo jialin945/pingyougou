@@ -12,6 +12,7 @@
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_portal_web" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_search_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_search_web" />
+    <file type="web" url="file://$PROJECT_DIR$/pingyougou_seckill_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_sellergoods_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_shop_web" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_user_service" />
@@ -24,6 +25,11 @@
         <option value="$PROJECT_DIR$/itcast_sms_service/pom.xml" />
         <option value="$PROJECT_DIR$/../itcast_sms_service/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/pingyougou_seckill_web/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">

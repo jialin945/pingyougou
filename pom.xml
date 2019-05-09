@@ -35,6 +35,10 @@
         <module>pingyougou_order_service</module>
         <module>pingyougou_pay_interface</module>
         <module>pingyougou_pay_service</module>
+        <module>pingyougou_seckill_interface</module>
+        <module>pingyougou_seckill_service</module>
+        <module>pingyougou_seckill_web</module>
+
 
 
     </modules>

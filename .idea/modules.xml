@@ -24,6 +24,9 @@
       <module fileurl="file://$PROJECT_DIR$/pingyougou_search_interface/pingyougou_search_interface.iml" filepath="$PROJECT_DIR$/pingyougou_search_interface/pingyougou_search_interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_search_service/pingyougou_search_service.iml" filepath="$PROJECT_DIR$/pingyougou_search_service/pingyougou_search_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_search_web/pingyougou_search_web.iml" filepath="$PROJECT_DIR$/pingyougou_search_web/pingyougou_search_web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_seckill_interface/pingyougou_seckill_interface.iml" filepath="$PROJECT_DIR$/pingyougou_seckill_interface/pingyougou_seckill_interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_seckill_service/pingyougou_seckill_service.iml" filepath="$PROJECT_DIR$/pingyougou_seckill_service/pingyougou_seckill_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pingyougou_seckill_web/pingyougou_seckill_web.iml" filepath="$PROJECT_DIR$/pingyougou_seckill_web/pingyougou_seckill_web.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_sellergoods_interface/pingyougou_sellergoods_interface.iml" filepath="$PROJECT_DIR$/pingyougou_sellergoods_interface/pingyougou_sellergoods_interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_sellergoods_service/pingyougou_sellergoods_service.iml" filepath="$PROJECT_DIR$/pingyougou_sellergoods_service/pingyougou_sellergoods_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/pingyougou_shop_web/pingyougou_shop_web.iml" filepath="$PROJECT_DIR$/pingyougou_shop_web/pingyougou_shop_web.iml" />

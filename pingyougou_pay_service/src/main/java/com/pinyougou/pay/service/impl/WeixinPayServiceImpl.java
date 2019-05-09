@@ -34,10 +34,11 @@ public class WeixinPayServiceImpl implements WeixinPayService {
     @Override
     public Map createNative(String out_trade_no, String total_fee) {
         //1.参数封装
-        Map param=new HashMap();
+        Map param = new HashMap();
         param.put("appid", appid);//公众账号ID
         param.put("mch_id", partner);//商户
         param.put("nonce_str", WXPayUtil.generateNonceStr());//随机字符串
+        //param.put("sign", "C380BEC2BFD727A4B6845133519F3AD6");
         param.put("body", "品优购");
         param.put("out_trade_no", out_trade_no);//交易订单号
         param.put("total_fee", total_fee);//金额（分）
@@ -47,10 +48,10 @@ public class WeixinPayServiceImpl implements WeixinPayService {
 
         try {
             String xmlParam = WXPayUtil.generateSignedXml(param, partnerkey);
-            System.out.println("请求的参数："+xmlParam);
+            System.out.println("请求的参数：" + xmlParam);
 
             //2.发送请求
-            HttpClient httpClient=new HttpClient("https://api.mch.weixin.qq.com/pay/unifiedorder");
+            HttpClient httpClient = new HttpClient("https://api.mch.weixin.qq.com/pay/unifiedorder");
             httpClient.setHttps(true);
             httpClient.setXmlParam(xmlParam);
             httpClient.post();
@@ -59,8 +60,8 @@ public class WeixinPayServiceImpl implements WeixinPayService {
             String xmlResult = httpClient.getContent();
 
             Map<String, String> mapResult = WXPayUtil.xmlToMap(xmlResult);
-            System.out.println("微信返回结果"+mapResult);
-            Map map=new HashMap<>();
+            System.out.println("微信返回结果" + mapResult);
+            Map map = new HashMap<>();
             map.put("code_url", mapResult.get("code_url"));//生成支付二维码的链接
             map.put("out_trade_no", out_trade_no);
             map.put("total_fee", total_fee);
@@ -75,12 +76,32 @@ public class WeixinPayServiceImpl implements WeixinPayService {
 
     }
 
+    @Override
+    public Map queryPayStatus(String out_trade_no) {
+        Map param = new HashMap();
+        param.put("appid", appid);//公众账号 ID
+        param.put("mch_id", partner);//商户号
+        param.put("out_trade_no", out_trade_no);//订单号
+        param.put("nonce_str", WXPayUtil.generateNonceStr());//随机字符串
+        String url = "https://api.mch.weixin.qq.com/pay/orderquery";
 
+        try {
+            String xmlParam = WXPayUtil.generateSignedXml(param, partnerkey);
+            HttpClient client = new HttpClient(url);
+            client.post();
+            client.setXmlParam(xmlParam);
+            client.setHttps(true);
+            String result = client.getContent();
+            Map<String, String> map = WXPayUtil.xmlToMap(result);
+            System.out.println(map);
+            return map;
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
-
-
-
+    }
 
 
     /**
@@ -119,19 +140,18 @@ public class WeixinPayServiceImpl implements WeixinPayService {
             String result = client.getContent();
             System.out.println(result);
             Map<String, String> resultMap = WXPayUtil.xmlToMap(result);
-            System.out.println("微信返回结果:"+resultMap);
+            System.out.println("微信返回结果:" + resultMap);
             Map<String, String> map = new HashMap<>();
             map.put("code_url", resultMap.get("code_url"));//支付地址 生成支付二维码的连接
             map.put("total_fee", total_fee);//总金额
-            map.put("out_trade_no",out_trade_no);//订单号
+            map.put("out_trade_no", out_trade_no);//订单号
 
-            return  map;
+            return map;
 
         } catch (Exception e) {
             e.printStackTrace();
             return new HashMap();
         }
-
 
 
     }
