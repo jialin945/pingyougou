@@ -3,6 +3,7 @@ import java.util.List;
 
 import com.pinyougou.seckill.service.SeckillGoodsService;
 import com.alibaba.dubbo.config.annotation.Reference;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ import entity.Result;
 @RequestMapping("/seckillGoods")
 public class SeckillGoodsController {
 
-	@Reference
+	@Reference(timeout = 8000)
 	private SeckillGoodsService seckillGoodsService;
 	
 	/**
@@ -118,6 +119,24 @@ public class SeckillGoodsController {
 	@RequestMapping("/search")
 	public PageResult search(@RequestBody TbSeckillGoods seckillGoods, int page, int rows  ){
 		return seckillGoodsService.findPage(seckillGoods, page, rows);		
+	}
+
+	//private RedisTemplate redisTemplate;
+
+	/**
+	 *  当前秒杀的商品
+	 * @return
+	 */
+	@RequestMapping("/findList")
+	public List<TbSeckillGoods> findList(){
+
+		return seckillGoodsService.findList();
+	}
+
+
+	@RequestMapping("/findOneFromRedis")
+	public TbSeckillGoods findOneFromRedis(Long id){
+		return seckillGoodsService.findOneFromRedis(id);
 	}
 	
 }

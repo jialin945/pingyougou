@@ -40,8 +40,10 @@
         <module>pingyougou_seckill_web</module>
 
 
-
     </modules>
+
+
+
 
     <packaging>pom</packaging>
 
