@@ -10,9 +10,9 @@
     <http pattern="/image/**" security="none"></http>
     <http pattern="/plugins/**" security="none"></http>
 
-    <http pattern="/*.html" security="none"></http>
+    <http pattern="/sekill-*.html" security="none"></http>
 
-    <http pattern="/*/*.do" security="none"></http>
+    <http pattern="/seckillGoods/*.do" security="none"></http>
 
 
 
@@ -25,7 +25,7 @@
 	<!--   entry-point-ref  入口点引用 -->
 	<http use-expressions="false" entry-point-ref="casProcessingFilterEntryPoint">  
         <!--匿名角色 必须放在ROLE_USER前面  IS_AUTHENTICATED_ANONYMOUSLY-->
-        <intercept-url pattern="/cart/*.do" access="IS_AUTHENTICATED_ANONYMOUSLY"></intercept-url>
+        <intercept-url pattern="/seckillOrder/*.do" access="IS_AUTHENTICATED_ANONYMOUSLY"></intercept-url>
         <intercept-url pattern="/**" access="ROLE_USER"/>
         <csrf disabled="true"/>  
         <!-- custom-filter为过滤器， position 表示将过滤器放在指定的位置上，before表示放在指定位置之前  ，after表示放在指定的位置之后  -->           

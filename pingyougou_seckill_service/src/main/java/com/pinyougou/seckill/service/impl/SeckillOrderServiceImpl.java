@@ -1,7 +1,11 @@
 package com.pinyougou.seckill.service.impl;
+import java.util.Date;
 import java.util.List;
 
+import com.pinyougou.mapper.TbSeckillGoodsMapper;
 import com.pinyougou.mapper.TbSeckillOrderMapper;
+import com.pinyougou.pojo.TbOrderItem;
+import com.pinyougou.pojo.TbSeckillGoods;
 import com.pinyougou.seckill.service.SeckillOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -14,6 +18,8 @@ import com.pinyougou.pojo.TbSeckillOrderExample.Criteria;
 
 
 import entity.PageResult;
+import org.springframework.data.redis.core.RedisTemplate;
+import utils.IdWorker;
 
 /**
  * 服务实现层
@@ -117,5 +123,48 @@ public class SeckillOrderServiceImpl implements SeckillOrderService {
 		Page<TbSeckillOrder> page= (Page<TbSeckillOrder>)seckillOrderMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+	@Autowired
+	private RedisTemplate redisTemplate;
+
+	@Autowired
+	private IdWorker idWorker;
+
+	@Autowired
+	private TbSeckillGoodsMapper seckillGoodsMapper ;
+
+	@Override
+	public void submitOrder(Long seckillId, String userId) {
+		//从缓存中查询秒杀商品
+		TbSeckillGoods seckillGoods = (TbSeckillGoods) redisTemplate.boundHashOps("seckillGoods").get(seckillId);
+		if(seckillGoods==null){
+			throw new RuntimeException("商品不存在");
+		}
+		if(seckillGoods.getStockCount()<=0){
+			throw new RuntimeException("商品已抢购一空");
+		}
+
+		//扣减（redis）库存
+		seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
+		//放回缓存
+		redisTemplate.boundHashOps("seckillGoods").put(seckillId, seckillGoods);
+		if(seckillGoods.getStockCount()==0){//如果已经被秒光
+			seckillGoodsMapper.updateByPrimaryKey(seckillGoods);//同步到数据库
+			redisTemplate.boundHashOps("seckillGoods").delete(seckillId);
+		}
+
+
+		//保存（redis）订单
+		long orderId = idWorker.nextId();
+		TbSeckillOrder seckillOrder = new TbSeckillOrder();
+		seckillOrder.setId(orderId);
+		seckillOrder.setCreateTime(new Date());
+		seckillOrder.setMoney(seckillGoods.getCostPrice());
+		seckillOrder.setSeckillId(seckillId);
+		seckillOrder.setUserId(userId);
+		seckillOrder.setSellerId(seckillGoods.getSellerId());
+		seckillOrder.setStatus("0");
+		redisTemplate.boundHashOps("seckillOrder").put(userId, seckillOrder);
+	}
+
 }
