@@ -77,7 +77,7 @@ public class WeixinPayServiceImpl implements WeixinPayService {
     }
 
 
-    @Override
+    //@Override
     public Map queryPayStatus(String out_trade_no) {
         //1.封装参数
         Map param=new HashMap();
@@ -138,7 +138,7 @@ public class WeixinPayServiceImpl implements WeixinPayService {
     }
 
 
-
+    //@Override
     public Map queryPayStatus2(String out_trade_no) {
         Map param = new HashMap();
         param.put("appid", appid);//公众账号 ID
@@ -150,9 +150,9 @@ public class WeixinPayServiceImpl implements WeixinPayService {
         try {
             String xmlParam = WXPayUtil.generateSignedXml(param, partnerkey);
             HttpClient client = new HttpClient(url);
-            client.post();
             client.setXmlParam(xmlParam);
             client.setHttps(true);
+            client.post();
             String result = client.getContent();
             Map<String, String> map = WXPayUtil.xmlToMap(result);
             System.out.println(map);
