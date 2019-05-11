@@ -38,6 +38,7 @@
         <module>pingyougou_seckill_interface</module>
         <module>pingyougou_seckill_service</module>
         <module>pingyougou_seckill_web</module>
+        <module>pingyougou_task_service</module>
 
 
     </modules>

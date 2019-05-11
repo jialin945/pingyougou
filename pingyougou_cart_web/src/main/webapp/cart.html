@@ -61,7 +61,7 @@
 			<h4>全部商品<span>11</span></h4>
 			<div class="cart-main">
 				<div class="yui3-g cart-th">
-					<div class="yui3-u-1-4"><input type="checkbox" name="" id="" value="" /> 全部</div>
+					<div class="yui3-u-1-4"><input type="checkbox" name=""  value="" /> 全部</div>
 					<div class="yui3-u-1-4">商品</div>
 					<div class="yui3-u-1-8">单价（元）</div>
 					<div class="yui3-u-1-8">数量</div>
@@ -70,14 +70,14 @@
 				</div>
 				<div class="cart-item-list" ng-repeat="cart in cartList">
 					<div class="cart-shop">
-						<input type="checkbox" name="" id="" value="" />
+						<input type="checkbox"  name=""  value="" />
 						<span class="shopname self">{{cart.sellerName}}:【商家 ID:{{cart.sellerId}}】<!--传智自营--></span>
 					</div>
 					<div class="cart-body">
 						<div class="cart-list" ng-repeat="orderItem in cart.orderItemList">
 							<ul class="goods-list yui3-g">
 								<li class="yui3-u-1-24">
-									<input type="checkbox" name="" id="" value="" />
+									<input type="checkbox" ng-click="selectOrderItem($even,orderItem)" name=""  value="" />
 								</li>
 								<li class="yui3-u-11-24">
 									<div class="good-item">
@@ -99,6 +99,9 @@
 								</li>
 							</ul>
 						</div>
+
+						{{selectOrderItemList}}
+
 						<!--<div class="cart-list">
 							<ul class="goods-list yui3-g">
 								<li class="yui3-u-1-24">

@@ -67,7 +67,7 @@ public class PayController {
             }
 
             if(map.get("trade_state").equals("SUCCESS")){//如果成功
-                result = new Result(false, "支付成功");
+                result = new Result(true, "支付成功");
 
                 //修改订单状态
                 orderService.updateOrderStatus(out_trade_no, map.get("transaction_id"));

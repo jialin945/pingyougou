@@ -26,6 +26,7 @@ app.controller('payController',function ($scope,$location,payService) {
     //查询支付状态
     queryPayStatus=function (out_trade_no) {
         payService.queryPayStatus(out_trade_no).success(
+
             function (response) {
                 if(response.success){
                     location.href="paysuccess.html#?money="+$scope.money;
@@ -34,8 +35,6 @@ app.controller('payController',function ($scope,$location,payService) {
                         //重新生成二维码
                         $scope.createNative();
 
-                    }else{
-                        location.href = "payfail.html";
                     }
 
                 }else{

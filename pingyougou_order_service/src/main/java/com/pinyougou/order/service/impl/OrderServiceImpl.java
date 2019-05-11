@@ -96,14 +96,14 @@ public class OrderServiceImpl implements OrderService {
 			tbOrder.setReceiverMobile(order.getReceiverMobile());//手机号
 			tbOrder.setReceiver(order.getReceiver());//收货人
 			tbOrder.setSourceType(order.getSourceType());//订单来源
-			tbOrder.setSellerId(order.getSellerId());//商家 ID
+			tbOrder.setSellerId(cart.getSellerId());//商家 ID 购物车获取取
 
 			//循环购物车明细
 			double money=0;
 			for (TbOrderItem orderItem : cart.getOrderItemList()) {
 				orderItem.setId(idWorker.nextId());
 				orderItem.setOrderId(orderId);
-				orderItem.setSellerId(order.getSellerId());
+				orderItem.setSellerId(cart.getSellerId());
 				money+=orderItem.getTotalFee().doubleValue();
 				orderItemMapper.insert(orderItem);
 			}

@@ -16,8 +16,10 @@
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_seckill_web" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_sellergoods_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_shop_web" />
+    <file type="web" url="file://$PROJECT_DIR$/pingyougou_task_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_user_service" />
     <file type="web" url="file://$PROJECT_DIR$/pingyougou_user_web" />
+    <file type="web" url="file://$PROJECT_DIR$/pingypugou_task_service" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">

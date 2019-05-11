@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="pingypugou_task_service:war">
+    <output-path>$PROJECT_DIR$/pingypugou_task_service/target</output-path>
+    <root id="archive" name="pingypugou_task_service.war">
+      <element id="artifact" artifact-name="pingypugou_task_service:war exploded" />
+    </root>
+  </artifact>
+</component>

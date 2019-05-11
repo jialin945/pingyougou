@@ -167,4 +167,62 @@ public class SeckillOrderServiceImpl implements SeckillOrderService {
 		redisTemplate.boundHashOps("seckillOrder").put(userId, seckillOrder);
 	}
 
+	@Override
+	public TbSeckillOrder searchOrderFromRedisByUserId(String userId) {
+		return (TbSeckillOrder) redisTemplate.boundHashOps("seckillOrder").get(userId);
+	}
+
+	@Override
+	public void saveOrderFromRedisToDb(String userId, Long orderId, String transactionId) {
+		System.out.println("saveOrderFromRedisToDb:"+userId);
+
+		//根据用户id查询订单
+		TbSeckillOrder seckillOrder = (TbSeckillOrder) redisTemplate.boundHashOps("seckillOrder").get(userId);
+		if(seckillOrder==null){
+			throw new RuntimeException("订单不存在");
+		}
+
+		//如果与传递过来的订单号不符
+		if(seckillOrder.getId().longValue()!=orderId.longValue()){
+			throw new RuntimeException("订单不相符");
+		}
+
+		seckillOrder.setTransactionId(transactionId);//交易流水号
+		seckillOrder.setPayTime(new Date());//支付时间
+		seckillOrder.setStatus("1");//状态
+		seckillOrderMapper.updateByPrimaryKey(seckillOrder);//保存到数据库
+
+		redisTemplate.boundHashOps("seckillOrder").delete(userId);//从 redis 中清除
+
+	}
+
+	@Override
+	public void deleteOrderFromRedis(String userId, Long orderId) {
+		//根据用户id查询缓存中的订单
+		TbSeckillOrder seckillOrder = (TbSeckillOrder) redisTemplate.boundHashOps("seckillOrder").get(userId);
+		if (seckillOrder != null && seckillOrder.getId().longValue() == orderId.longValue()) {
+			redisTemplate.boundHashOps("seckillOrder").delete(userId);//删除缓存中的订单
+
+			//恢复库存
+			//1.从缓存中提取秒杀商品
+			TbSeckillGoods seckillGoods = (TbSeckillGoods) redisTemplate.boundHashOps("seckillGoods").get(seckillOrder.getSeckillId());
+			if(seckillGoods!=null){
+				seckillGoods.setStockCount(seckillGoods.getStockCount() + 1);
+				//存入缓存
+				redisTemplate.boundHashOps("seckillGoods").put(seckillGoods.getSellerId(), seckillGoods);
+			}else{
+				seckillGoods = new TbSeckillGoods();
+				seckillGoods.setId(seckillOrder.getSeckillId());
+				//..........
+				seckillGoods.setStockCount(1);
+				redisTemplate.boundHashOps("seckillGoods").put(seckillOrder.getSeckillId(), seckillGoods);
+			}
+
+			System.out.println("订单取消:" + orderId);
+
+		}
+
+
+	}
+
 }

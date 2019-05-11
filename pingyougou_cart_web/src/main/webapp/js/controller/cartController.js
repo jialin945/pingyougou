@@ -89,7 +89,7 @@ app.controller("cartController", function ($scope, cartService) {
 
 
 
-
+    //保存地址
     $scope.save=function () {
         cartService.add( $scope.entity  ).success(
             function(response){
@@ -103,6 +103,26 @@ app.controller("cartController", function ($scope, cartService) {
                 }
             }
         );
+
+
+
+        //提交选中的订单 付款
+        $scope.selectOrderItemList=[];
+        $scope.selectOrderItem=function (event,orderItem) {
+            //alert("1111111111");
+            if(event.target.checked){
+                //选中状态添加到集合
+                $scope.selectOrderItemList.push(orderItem);
+            }else{
+                //取消选中 移除
+                $scope.selectOrderItemList.splice($scope.selectOrderItemList.indexOf(orderItem), 1);
+            }
+        }
+
+
+
+
+
 
         /*addressService.add( $scope.entity  ).success(
             function(response){
