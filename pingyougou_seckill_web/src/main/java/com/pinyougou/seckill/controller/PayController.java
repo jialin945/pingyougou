@@ -76,7 +76,7 @@ public class PayController {
 
             x++;//设置超时时间为 5 分钟
 
-            if(x>=100){
+            if(x>=4){
                 result = new Result(false, "二维码超时");
 
                 //删除订单

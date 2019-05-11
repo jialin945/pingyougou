@@ -13,13 +13,16 @@ app.controller('payController', function ($scope, $location, payService) {
                     value: response.code_url
                 });
 
+                //查询支付状态
+                queryPayStatus();
+
             }
         );
     };
 
 
     //获取金额
-    $scope.getmoney = function () {
+    $scope.getMoney = function () {
         return $location.search()["money"];
     }
 
@@ -28,7 +31,7 @@ app.controller('payController', function ($scope, $location, payService) {
     queryPayStatus = function () {
         payService.queryPayStatus($scope.out_trade_no).success(
             function (response) {
-                if (response.success()) {
+                if (response.success) {
                     location.href = "paysuccess.html#?money=" + $scope.money;
                 } else {
 

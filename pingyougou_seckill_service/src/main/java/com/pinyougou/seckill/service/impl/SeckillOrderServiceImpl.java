@@ -190,7 +190,7 @@ public class SeckillOrderServiceImpl implements SeckillOrderService {
 		seckillOrder.setTransactionId(transactionId);//交易流水号
 		seckillOrder.setPayTime(new Date());//支付时间
 		seckillOrder.setStatus("1");//状态
-		seckillOrderMapper.updateByPrimaryKey(seckillOrder);//保存到数据库
+		seckillOrderMapper.insert(seckillOrder);//保存到数据库
 
 		redisTemplate.boundHashOps("seckillOrder").delete(userId);//从 redis 中清除
 
@@ -209,7 +209,7 @@ public class SeckillOrderServiceImpl implements SeckillOrderService {
 			if(seckillGoods!=null){
 				seckillGoods.setStockCount(seckillGoods.getStockCount() + 1);
 				//存入缓存
-				redisTemplate.boundHashOps("seckillGoods").put(seckillGoods.getSellerId(), seckillGoods);
+				redisTemplate.boundHashOps("seckillGoods").put(seckillOrder.getSeckillId(), seckillGoods);
 			}else{
 				seckillGoods = new TbSeckillGoods();
 				seckillGoods.setId(seckillOrder.getSeckillId());
