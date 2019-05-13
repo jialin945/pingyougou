@@ -144,6 +144,23 @@ public class CartServiceImpl implements CartService {
         return cartList1;
     }
 
+    @Override
+    public void selectOrderItemListPayToRedis(String username,List<Cart> selectOrderItemList) {
+        System.out.println("向 redis 存入购物车数据....." + username);
+
+        redisTemplate.boundHashOps("selectOrderItemList").put(username, selectOrderItemList);
+    }
+
+    @Override
+    public List<Cart> findOrderItemListPayFromRedis(String username) {
+        List<Cart> cartList = (List<Cart>) redisTemplate.boundHashOps("selectOrderItemList").get(username);
+        if (cartList == null) {
+            cartList = new ArrayList<>();
+        }
+
+        return cartList;
+    }
+
     /**
      * 根据商品明细 ID 查询
      *

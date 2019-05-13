@@ -48,6 +48,16 @@ app.service("cartService",function ($http) {
     this.update=function(entity){
         return  $http.post('address/update.do',entity );
     }
+
+    //异步保存到redis中 选中的订单结算
+    this.selectOrderItemListPay=function (selectOrderItemList) {
+        return $http.post('cart/selectOrderItemListPayToRedis.do',selectOrderItemList);
+    }
+
+    //查询出来需要支付的结算订单
+    this.findOrderItemListPay=function () {
+       return $http.get('findOrderItemListPayFromRedis.do');
+    }
     
 
 });

@@ -42,4 +42,18 @@ public interface CartService {
      */
     public List<Cart> mergeCartList(List<Cart> cartList1, List<Cart> cartList2);
 
+
+    /**
+     * 保存需要支付购物车的订单到redis中
+     * @param cartList
+     */
+    public void selectOrderItemListPayToRedis(String username,List<Cart> cartList);
+
+
+    /**
+     * 查询需要支付的订单购物车列表返回
+     * @return
+     */
+    public List<Cart> findOrderItemListPayFromRedis(String username);
+
 }

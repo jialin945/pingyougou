@@ -104,26 +104,6 @@ app.controller("cartController", function ($scope, cartService) {
             }
         );
 
-
-
-        //提交选中的订单 付款
-        $scope.selectOrderItemList=[];
-        $scope.selectOrderItem=function (event,orderItem) {
-            //alert("1111111111");
-            if(event.target.checked){
-                //选中状态添加到集合
-                $scope.selectOrderItemList.push(orderItem);
-            }else{
-                //取消选中 移除
-                $scope.selectOrderItemList.splice($scope.selectOrderItemList.indexOf(orderItem), 1);
-            }
-        }
-
-
-
-
-
-
         /*addressService.add( $scope.entity  ).success(
             function(response){
                 if(response.success){
@@ -137,7 +117,49 @@ app.controller("cartController", function ($scope, cartService) {
             }
         );*/
 
+    };
+
+
+    //提交选中的订单 付款
+    $scope.selectOrderItemList=[];
+    $scope.selectOrderItem=function ($event,orderItem) {
+        //alert("1111111111");
+        if($event.target.checked){
+            //选中状态添加到集合
+            $scope.selectOrderItemList.push(orderItem);
+        }else{
+            //取消选中 移除
+            $scope.selectOrderItemList.splice($scope.selectOrderItemList.indexOf(orderItem), 1);
+        }
+    };
+
+
+    //提交选中的订单结算
+    $scope.selectOrderItemListPay=function () {
+        cartService.selectOrderItemListPay($scope.selectOrderItemList).success(
+            function (response) {
+                if(response.success){
+                    alert("请确认订单信息");
+                }else{
+                    alert("订单错误");
+                }
+            }
+        );
+    };
+
+
+    //查询出来需要支付的结算订单
+    $scope.findOrderItemListPay=function () {
+        cartService.findOrderItemListPay().success(
+            function (response) {
+                $scope.cartList = response;
+                $scope.totalValue = cartService.num($scope.cartList);//求合计数
+            }
+        );
     }
+
+
+
 
 
 
