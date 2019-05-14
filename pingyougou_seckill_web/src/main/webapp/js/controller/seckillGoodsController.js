@@ -53,7 +53,7 @@ app.controller('seckillGoodsController',function ($scope,$location,$interval,sec
     $scope.submitOrder=function () {
         seckillGoodsService.submitOrder($scope.entity.id).success(
             function (response) {
-                if(response.message){
+                if(response.success){
                     alert("下单成功，请在 5 分钟内完成支付");
                     location.href="pay.html"
                 }else{

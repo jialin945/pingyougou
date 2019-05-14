@@ -85,7 +85,7 @@ public class PayController {
 
             x++;//每次加1  计数器
 
-            if(x>=100){
+            if(x>=20){
                 result = new Result(false, "二维码超时");
                 break;
             }

@@ -212,9 +212,9 @@ public class SeckillOrderServiceImpl implements SeckillOrderService {
 				redisTemplate.boundHashOps("seckillGoods").put(seckillOrder.getSeckillId(), seckillGoods);
 			}else{
 				seckillGoods = new TbSeckillGoods();
-				seckillGoods.setId(seckillOrder.getSeckillId());
-				//..........
+				seckillGoods = seckillGoodsMapper.selectByPrimaryKey(seckillOrder.getSeckillId());
 				seckillGoods.setStockCount(1);
+				seckillGoodsMapper.updateByPrimaryKey(seckillGoods);
 				redisTemplate.boundHashOps("seckillGoods").put(seckillOrder.getSeckillId(), seckillGoods);
 			}
 
